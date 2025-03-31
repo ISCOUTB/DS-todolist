@@ -1,4 +1,4 @@
-# naming_app
+# todolist
 
 A new Flutter project.
 
