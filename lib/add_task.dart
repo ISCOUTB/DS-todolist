@@ -33,6 +33,7 @@ class _TodoListPageState extends State<TodoListPage> {
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _tagsController = TextEditingController();
   DateTime? _dueDate;
   bool _isCompleted = false;
 
@@ -80,12 +81,15 @@ class _TodoListPageState extends State<TodoListPage> {
           description: _descriptionController.text,
           dueDate: _dueDate,
           isCompleted: _isCompleted,
+          tags:
+              _tagsController.text.split(',').map((tag) => tag.trim()).toList(),
         ));
 
         _saveTodoItems();
 
         _nameController.clear();
         _descriptionController.clear();
+        _tagsController.clear();
         _dueDate = null;
         _isCompleted = false;
 
@@ -163,6 +167,14 @@ class _TodoListPageState extends State<TodoListPage> {
                     maxLines: 3,
                   ),
                   SizedBox(height: 15),
+                  TextFormField(
+                    controller: _tagsController,
+                    decoration: InputDecoration(
+                      labelText: 'Etiquetas (separadas por comas)',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 15),
                   ListTile(
                     title: Text(
                       _dueDate == null
@@ -199,6 +211,7 @@ class _TodoListPageState extends State<TodoListPage> {
   void _editTodoItem(int index) {
     _nameController.text = _todoItems[index].name;
     _descriptionController.text = _todoItems[index].description;
+    _tagsController.text = _todoItems[index].tags.join(', ');
     _dueDate = _todoItems[index].dueDate;
     _isCompleted = _todoItems[index].isCompleted;
 
@@ -248,6 +261,14 @@ class _TodoListPageState extends State<TodoListPage> {
                     maxLines: 3,
                   ),
                   SizedBox(height: 15),
+                  TextFormField(
+                    controller: _tagsController,
+                    decoration: InputDecoration(
+                      labelText: 'Etiquetas (separadas por comas)',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 15),
                   ListTile(
                     title: Text(
                       _dueDate == null
@@ -277,10 +298,15 @@ class _TodoListPageState extends State<TodoListPage> {
                             description: _descriptionController.text,
                             dueDate: _dueDate,
                             isCompleted: _isCompleted,
+                            tags: _tagsController.text
+                                .split(',')
+                                .map((tag) => tag.trim())
+                                .toList(),
                           );
                           _saveTodoItems();
                           _nameController.clear();
                           _descriptionController.clear();
+                          _tagsController.clear();
                           _dueDate = null;
                           _isCompleted = false;
                           Navigator.of(context).pop();
@@ -340,6 +366,11 @@ class _TodoListPageState extends State<TodoListPage> {
                             : null,
                       ),
                     ),
+                  if (item.tags.isNotEmpty)
+                    Text(
+                      'Etiquetas: ${item.tags.join(', ')}',
+                      style: TextStyle(color: Colors.grey),
+                    ),
                 ],
               ),
               trailing: Row(
@@ -379,12 +410,14 @@ class TodoItem {
   final String description;
   final DateTime? dueDate;
   bool isCompleted;
+  final List<String> tags;
 
   TodoItem({
     required this.name,
     this.description = '',
     this.dueDate,
     this.isCompleted = false,
+    this.tags = const [],
   });
 
   factory TodoItem.fromJson(Map<String, dynamic> json) {
@@ -393,6 +426,7 @@ class TodoItem {
       description: json['description'],
       dueDate: json['dueDate'] != null ? DateTime.parse(json['dueDate']) : null,
       isCompleted: json['isCompleted'],
+      tags: List<String>.from(json['tags'] ?? []),
     );
   }
 
@@ -402,6 +436,7 @@ class TodoItem {
       'description': description,
       'dueDate': dueDate?.toIso8601String(),
       'isCompleted': isCompleted,
+      'tags': tags,
     };
   }
 }
