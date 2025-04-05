@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:to_do_list/homepage.dart';
+import 'package:to_do_list/screens/home_page.dart';
 import 'package:to_do_list/screens/login_screen.dart';
 
 class Wrapper extends StatefulWidget {
@@ -27,7 +27,7 @@ class _WrapperState extends State<Wrapper> {
             // Verificar si el correo está verificado
             final user = snapshot.data!;
             if (user.emailVerified) {
-              return Homepage();
+              return HomePage();
             } else {
               return LoginScreen();
             }

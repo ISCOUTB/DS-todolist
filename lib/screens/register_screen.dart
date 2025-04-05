@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:to_do_list/components/my_button.dart';
 import 'package:to_do_list/components/my_text_field.dart';
-import 'package:to_do_list/wrapper.dart';
+import 'package:to_do_list/services/wrapper.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});

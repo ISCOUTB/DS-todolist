@@ -2,7 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:to_do_list/firebase_options.dart';
-import 'package:to_do_list/wrapper.dart';
+import 'package:to_do_list/screens/home_page.dart';
+import 'package:to_do_list/services/wrapper.dart';
 import 'package:get/get.dart';
 
 void main() async {
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Wrapper(),
+      home: HomePage(),
     );
   }
 }
