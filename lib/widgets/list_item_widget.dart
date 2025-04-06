@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_list/models/task.dart';
+import 'package:to_do_list/models/task.dart';
 
-class ListItemWidget extends StatelessWidget {
+class ListItemWidget extends StatefulWidget {
   final Task task;
 
   const ListItemWidget({super.key, required this.task});
 
   @override
+  State<ListItemWidget> createState() => _ListItemWidgetState();
+}
+
+
+
+
+class _ListItemWidgetState extends State<ListItemWidget> {
+  @override
   Widget build(BuildContext context) {
+    final task = widget.task;
     return Card(
       clipBehavior: Clip.antiAlias,
       elevation: 6,
@@ -30,10 +40,10 @@ class ListItemWidget extends StatelessWidget {
             children: [
               if (task.description.isNotEmpty) Text(task.description),
               Text(
-                'Vence: ${task.dueDate.day}/${task.dueDate.month}/${task.dueDate.year}',
+              'Vence: ${task.dueDate?.day}/${task.dueDate?.month}/${task.dueDate?.year}',
                 style: TextStyle(
                   color:
-                      task.dueDate.isBefore(DateTime.now()) && !task.completed
+                      task.dueDate!.isBefore(DateTime.now()) && !task.completed
                           ? Colors.red
                           : null,
                 ),
@@ -50,7 +60,11 @@ class ListItemWidget extends StatelessWidget {
             children: [
               IconButton(icon: Icon(Icons.edit), onPressed: () => {}),
               IconButton(icon: Icon(Icons.delete), onPressed: () => {}),
-              Checkbox(value: task.completed, onChanged: (bool? value) {}),
+              Checkbox(value: task.completed, onChanged: (bool? value) {
+                setState(() {
+                  task.completed = value!;
+                });
+              }),
             ],
           ),
         ),

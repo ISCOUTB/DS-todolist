@@ -2,8 +2,8 @@ class Task {
   final String id;
   final String title;
   final String description;
-  final DateTime dueDate;
-  final bool completed;
+  final DateTime? dueDate;
+  late final bool completed;
   final DateTime createdAt;
   final String category;
 
@@ -11,7 +11,7 @@ class Task {
     required this.id,
     required this.title,
     required this.description,
-    required this.dueDate,
+    this.dueDate,
     required this.completed,
     required this.createdAt,
     required this.category,
@@ -26,6 +26,18 @@ class Task {
       completed: json['completed'],
       createdAt: DateTime.parse(json['createdAt']),
       category: json['category'],
-    );
+    );  
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'dueDate': dueDate?.toIso8601String(),
+      'completed': completed,
+      'createdAt': createdAt.toIso8601String(),
+      'category': category,
+    };
   }
 }

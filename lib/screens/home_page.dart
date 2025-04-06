@@ -1,6 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:to_do_list/components/search_textfield.dart';
+import 'package:to_do_list/widgets/calendar.dart';
 import 'package:to_do_list/widgets/drawer_widget.dart';
 import 'package:to_do_list/widgets/responsive_widget.dart';
 import 'package:to_do_list/widgets/task_widget.dart';
@@ -13,6 +13,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0; // Índice de la vista seleccionada
+
+  // Lista de vistas para alternar
+  final List<Widget> _views = [
+   ResponsiveWidget(
+        mobileLayout: BuildMobileLayout(), 
+        tabletLayout: BuildTabletLayout(),
+        desktopLayout: BuildDesktopLayout()
+      ),
+    Calendar(), // Segunda vista (puedes personalizarla)
+  ];
   
   @override
   Widget build(BuildContext context){ 
@@ -20,14 +31,28 @@ class _HomePageState extends State<HomePage> {
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text("TODO List"),
+        title: SearchTextfield(),
       ),
       drawer: isMobile ? const Drawer(child: DrawerWidget(),) : null,
-      body: ResponsiveWidget(
-        mobileLayout: BuildMobileLayout(), 
-        tabletLayout: BuildTabletLayout(),
-        desktopLayout: BuildDesktopLayout()
-      ),
+      body: _views[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex, // Índice actual
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index; // Cambia la vista al seleccionar una pestaña
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: "Tareas",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month_rounded),
+            label: "Calendario",
+          ),
+        ],
+        )
     ); 
   }
 }
