@@ -11,39 +11,48 @@ class TaskWidget extends StatefulWidget {
 }
 
 class _TaskWidgetState extends State<TaskWidget> {
-  late Future<List<Task>> _tasks;
+  List<Task> _tasks = [];
 
   @override
   void initState() {
     super.initState();
-    _tasks = DataManager.loadTasks();
+    DataManager.leerDatosJSON().then((loadedTasks) {
+      setState(() {
+        _tasks = loadedTasks;
+      });
+    });
+  }
+
+  void addTask(Task task) {
+    setState(() {
+      _tasks.add(task); // Agrega la nueva tarea a la lista
+    });
+  }
+
+  void deleteTask(Task task) {
+    setState(() {
+      _tasks.remove(task); // Remove the task from the list
+    });
+    //DataManager.saveTaskToSharedPreferences(_tasks); // Save updated list
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.grey[200],
-      child: FutureBuilder<List<Task>>(
-        future: _tasks,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return const Center(child: Text('Error loading tasks'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No tasks available'));
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
+      child: _tasks.isEmpty
+          ? const Center(child: Text('No tasks available'))
+          : ListView.builder(
+              itemCount: _tasks.length,
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
-                final task = snapshot.data![index];
-                return ListItemWidget(task: task);
+                final task = _tasks[index];
+                return ListItemWidget(
+                  task: task,
+                  onDelete: () => deleteTask(task), // Pass delete callback
+                );
               },
-            );
-          }
-        },
-      ),
+            ),
     );
   }
 }

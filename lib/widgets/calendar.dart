@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart'; // Import for locale initialization
+import 'package:to_do_list/services/data_manager.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({super.key});
@@ -11,11 +12,23 @@ class Calendar extends StatefulWidget {
 
 class _CalendarState extends State<Calendar> {
   DateTime today = DateTime.now();
+  Map<DateTime, int> tasksPerDay = {};
 
   @override
   void initState() {
     super.initState();
     initializeDateFormatting('es_CO'); // Initialize locale data
+    _loadTasksPerDay();
+  }
+
+  Future<void> _loadTasksPerDay() async {
+    final tasks = await DataManager.getTasksPerDay();
+    setState(() {
+      tasksPerDay = tasks.map((key, value) {
+        final normalizedKey = DateTime.utc(key.year, key.month, key.day);
+        return MapEntry(normalizedKey, value);
+      });
+    });
   }
 
   void _onDaySelected(DateTime day, DateTime focusedDay) {
@@ -23,12 +36,6 @@ class _CalendarState extends State<Calendar> {
       today = day;
     });
   }
-
-  Map<DateTime, int> tasksPerDay = {
-    DateTime.utc(2025, 4, 8): 3,
-    DateTime.utc(2025, 4, 7): 1,
-    DateTime.utc(2025, 4, 9): 0,
-  };
 
   @override
   Widget build(BuildContext context) {
@@ -61,13 +68,8 @@ class _CalendarState extends State<Calendar> {
                 onDaySelected: _onDaySelected,
                 calendarBuilders: CalendarBuilders(
                   defaultBuilder: (context, day, focusedDay) {
-                    final tasks =
-                        tasksPerDay[DateTime.utc(
-                          day.year,
-                          day.month,
-                          day.day,
-                        )] ??
-                        0;
+                    final normalizedDay = DateTime.utc(day.year, day.month, day.day);
+                    final tasks = tasksPerDay[normalizedDay] ?? 0;
                     return Stack(
                       alignment: Alignment.center,
                       children: [

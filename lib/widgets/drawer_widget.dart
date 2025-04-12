@@ -48,10 +48,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   },
                 ),
               ),
-              ElevatedButton(
-                onPressed: _loadCategories, // Recargar categorías
-                child: const Text('Reload Categories'),
-              ),
             ],
           );
         }
@@ -81,12 +77,12 @@ class _DrawerWidgetState extends State<DrawerWidget> {
     title: AutoSizeText(
       categoryName, // Mostrar el nombre de la categoría
       minFontSize: 18,
-      maxFontSize: 28,
+      maxFontSize: 25,
       style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500),
     ),
     onTap: () {
       // Handle category selection
-      print('Selected Category: $categoryName');
+      //print('Selected Category: $categoryName');
     },
   );
 }

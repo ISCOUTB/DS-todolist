@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_list/models/task.dart';
-import 'package:to_do_list/models/task.dart';
 
 class ListItemWidget extends StatefulWidget {
   final Task task;
+  final VoidCallback onDelete;
 
-  const ListItemWidget({super.key, required this.task});
+  const ListItemWidget({super.key, required this.task, required this.onDelete});
 
   @override
   State<ListItemWidget> createState() => _ListItemWidgetState();
 }
 
-
-
-
 class _ListItemWidgetState extends State<ListItemWidget> {
+
   @override
   Widget build(BuildContext context) {
     final task = widget.task;
@@ -59,10 +57,15 @@ class _ListItemWidgetState extends State<ListItemWidget> {
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(icon: Icon(Icons.edit), onPressed: () => {}),
-              IconButton(icon: Icon(Icons.delete), onPressed: () => {}),
+              IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: () {
+                  widget.onDelete(); // Notify parent widget
+                },
+              ),
               Checkbox(value: task.completed, onChanged: (bool? value) {
                 setState(() {
-                  task.completed = value!;
+                  
                 });
               }),
             ],
