@@ -1,0 +1,32 @@
+{
+    "tasks": [
+      {
+        "id": "task1",
+        "title": "Comprar víveres",
+        "description": "Comprar leche, pan y huevos",
+        "dueDate": "2025-03-17T18:00:00",
+        "completed": false,
+        "createdAt": "2025-03-16T14:00",
+        "category": "Personal"
+      },
+      {
+        "id": "task2",
+        "title": "Reunión de trabajo",
+        "description": "Reunión con el equipo de desarrollo",
+        "dueDate": "2025-03-18T09:00",
+        "completed": false,
+        "createdAt": "2025-03-16T15:00",
+        "category": "Trabajo"
+      },
+      {
+        "id": "task3",
+        "title": "Comprar tabaco",
+        "description": "Comprar tabaco para el fin de semana",
+        "dueDate": "2025-04-17T18:00:00",
+        "completed": false,
+        "createdAt": "2025-03-16T14:00",
+        "category": "Personal"
+      }
+    ]
+  }
+  
