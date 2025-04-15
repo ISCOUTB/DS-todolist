@@ -19,7 +19,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
   }
 
   void _loadCategories() {
-    _categoriesFuture = DataManager.loadCategories();
+    _categoriesFuture = DataManager.leerCategorias();
     setState(() {}); // Asegura que el widget se reconstruya
   }
 

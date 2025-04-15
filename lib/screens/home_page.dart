@@ -15,14 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0; // Índice de la vista seleccionada
-  TextEditingController title = TextEditingController();
-  TextEditingController description = TextEditingController();
-  TextEditingController category = TextEditingController();
-  bool completed = false; // Variable para almacenar el estado de la tarea
-  DateTime?
-  dueDate; // Variable para almacenar la fecha de vencimiento seleccionada
 
-  // Lista de vistas para alternar
   final List<Widget> _views = [
     ResponsiveWidget(
       mobileLayout: BuildMobileLayout(),
@@ -40,7 +33,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: SearchTextfield(),
-        actions: [AddTaskButton()],
+        actions: [
+          AddTaskButton(),
+        ],
       ),
       drawer: isMobile ? const Drawer(child: DrawerWidget()) : null,
       body: _views[_currentIndex],
@@ -68,8 +63,6 @@ class _HomePageState extends State<HomePage> {
               : null,
     );
   }
-
-  
 }
 
 Widget BuildMobileLayout() =>

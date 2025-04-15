@@ -1,9 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 import 'package:to_do_list/firebase_options.dart';
 import 'package:to_do_list/screens/home_page.dart';
-import 'package:to_do_list/services/wrapper.dart';
+import 'package:to_do_list/services/task_notifier.dart';
 import 'package:get/get.dart';
 
 void main() async {
@@ -12,7 +13,14 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => TaskNotifier()..loadTasks()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

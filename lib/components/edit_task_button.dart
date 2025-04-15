@@ -5,30 +5,37 @@ import 'package:to_do_list/models/task.dart';
 import 'package:to_do_list/services/task_notifier.dart';
 import 'package:uuid/uuid.dart';
 
-class AddTaskButton extends StatefulWidget {
-  const AddTaskButton({super.key});
+class EditTaskButton extends StatefulWidget {
+  final Task task;
+  const EditTaskButton({super.key, required this.task});
 
   @override
-  _AddTaskButtonState createState() => _AddTaskButtonState();
+  State<EditTaskButton> createState() => _EditTaskButtonState();
 }
 
-class _AddTaskButtonState extends State<AddTaskButton> {
+class _EditTaskButtonState extends State<EditTaskButton> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  List<String> _categories = [
-    "General",
-    "Trabajo",
-    "Personal",
-  ]; // Lista inicial de categorías
   DateTime? _dueDate;
   bool _isCompleted = false;
-  String? _selectedCategory; // Categoría seleccionada
+  
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _titleController.text = widget.task.title;
+    _descriptionController.text = widget.task.description;
+    _dueDate = widget.task.dueDate;
+    _isCompleted = widget.task.completed;
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.add),
+      icon: const Icon(Icons.edit),
       onPressed: () {
         // Acción al presionar el botón de agregar
         showModalBottomSheet(
@@ -49,7 +56,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'Añadir nueva tarea',
+                            'Editar tarea',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -102,54 +109,18 @@ class _AddTaskButtonState extends State<AddTaskButton> {
                             },
                           ),
                           SizedBox(height: 15),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Categoria",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              DropdownButton<String>(
-                                value: _selectedCategory,
-                                isExpanded: true,
-                                hint: Text("Seleccionar categoría"),
-                                items: [
-                                  ..._categories.map((category) {
-                                    return DropdownMenuItem<String>(
-                                      value: category,
-                                      child: Text(category),
-                                    );
-                                  }).toList(),
-                                  DropdownMenuItem<String>(
-                                    value: "add_new",
-                                    child: Row(
-                                      children: const [
-                                        Icon(Icons.add, color: Colors.blue),
-                                        SizedBox(width: 8),
-                                        Text("Añadir nueva categoría"),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                                onChanged: (value) {
-                                  if (value == "add_new") {
-                                    _showAddCategoryDialog(context);
-                                  } else {
-                                    setState(() {
-                                      _selectedCategory = value;
-                                    });
-                                  }
-                                },
-                              ),
-                            ],
+                          CheckboxListTile(
+                            title: Text('Completada'),
+                            value: _isCompleted,
+                            onChanged: (bool? value) {
+                              setModalState(() {
+                                _isCompleted = value ?? false;
+                              });
+                            },
                           ),
                           SizedBox(height: 20),
                           GestureDetector(
-                            onTap: addTask,
+                            onTap: editTask,
                             child: Container(
                               padding: const EdgeInsets.all(25),
                               margin: const EdgeInsets.symmetric(
@@ -161,7 +132,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
                               ),
                               child: Center(
                                 child: Text(
-                                  "Añadir tarea",
+                                  "Editar tarea",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -184,52 +155,10 @@ class _AddTaskButtonState extends State<AddTaskButton> {
     );
   }
 
-  void _showAddCategoryDialog(BuildContext context) {
-    final TextEditingController _categoryController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Añadir nueva categoría"),
-          content: TextField(
-            controller: _categoryController,
-            decoration: InputDecoration(
-              labelText: "Nombre de la categoría",
-              border: OutlineInputBorder(),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Cierra el diálogo
-              },
-              child: Text("Cancelar"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final newCategory = _categoryController.text.trim();
-                if (newCategory.isNotEmpty) {
-                  setState(() {
-                    _categories.add(newCategory);
-                    _selectedCategory = newCategory;
-                  });
-                }
-                Navigator.pop(context); // Cierra el diálogo
-              },
-              child: Text("Añadir"),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void addTask() {
+  void editTask() {
     if (_formKey.currentState!.validate()) {
-      final String uniqueId = Uuid().v4(); // Genera un UUID único
       final newTask = Task(
-        id: uniqueId,
+        id: widget.task.id, // Mantiene el mismo ID
         title: _titleController.text,
         description: _descriptionController.text,
         dueDate: _dueDate,
@@ -239,8 +168,8 @@ class _AddTaskButtonState extends State<AddTaskButton> {
       );
 
       try {
-        context.read<TaskNotifier>().addTask(newTask);
-        debugPrint('Task added successfully');
+        context.read<TaskNotifier>().editarTarea(newTask);
+        debugPrint('Edit successfully');
         Navigator.pop(context); // Cierra el modal
 
         _titleController.clear(); // Limpia el campo de título

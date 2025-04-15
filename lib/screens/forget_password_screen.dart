@@ -5,7 +5,7 @@ import 'package:to_do_list/components/my_button.dart';
 import 'package:to_do_list/components/my_text_field.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
-  ForgetPasswordScreen({super.key});
+  const ForgetPasswordScreen({super.key});
 
   @override
   _ForgetPasswordScreenState createState() => _ForgetPasswordScreenState();

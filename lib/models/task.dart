@@ -3,7 +3,7 @@ class Task {
   final String title;
   final String description;
   final DateTime? dueDate;
-  final bool completed;
+  late final bool completed;
   final DateTime createdAt;
   final String category;
 
