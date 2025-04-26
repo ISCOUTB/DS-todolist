@@ -21,7 +21,9 @@ class TaskWidget extends StatelessWidget {
                 return ListItemWidget(
                   task: task,
                   onDelete: () => context.read<TaskNotifier>().eliminarTarea(task.id),
-                  onToggleCompleted: (bool? value) {},
+                  onToggleCompleted: (bool? value) {
+                    context.read<TaskNotifier>().toggleTaskCompletion(task.id, value!);
+                  },
                 );
               },
             ),

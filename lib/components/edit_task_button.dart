@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do_list/models/task.dart';
 import 'package:to_do_list/services/task_notifier.dart';
-import 'package:uuid/uuid.dart';
 
 class EditTaskButton extends StatefulWidget {
   final Task task;

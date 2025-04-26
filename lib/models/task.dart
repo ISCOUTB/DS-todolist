@@ -3,7 +3,7 @@ class Task {
   final String title;
   final String description;
   final DateTime? dueDate;
-  late final bool completed;
+  bool completed;
   final DateTime createdAt;
   final String category;
 
@@ -22,11 +22,11 @@ class Task {
       id: json['id'],
       title: json['title'],
       description: json['description'],
-      dueDate: DateTime.parse(json['dueDate']),
-      completed: json['completed'],
+      dueDate: json['dueDate'] != null ? DateTime.parse(json['dueDate']) : null,
+      completed: json['completed'] ?? false,
       createdAt: DateTime.parse(json['createdAt']),
       category: json['category'],
-    );  
+    );
   }
 
   Map<String, dynamic> toJson() {

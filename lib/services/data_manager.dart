@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:to_do_list/models/task.dart';
 import 'package:http/http.dart' as http;
@@ -13,28 +14,32 @@ class DataManager {
   }
 
   static Future<Map<DateTime, int>> getTasksPerDay() async {
-  try {
-    // Obtiene las tareas desde el servidor
-    final List<Task> tasks = await leerDatosJSON();
+    try {
+      // Obtiene las tareas desde el servidor
+      final List<Task> tasks = await leerDatosJSON();
 
-    // Procesa las tareas para contar cuántas hay por día
-    final Map<DateTime, int> tasksPerDay = {};
-    for (var task in tasks) {
-      if (task.dueDate != null) {
-        final dueDate = DateTime(task.dueDate!.year, task.dueDate!.month, task.dueDate!.day);
-        tasksPerDay[dueDate] = (tasksPerDay[dueDate] ?? 0) + 1;
+      // Procesa las tareas para contar cuántas hay por día
+      final Map<DateTime, int> tasksPerDay = {};
+      for (var task in tasks) {
+        if (task.dueDate != null) {
+          final dueDate = DateTime(
+            task.dueDate!.year,
+            task.dueDate!.month,
+            task.dueDate!.day,
+          );
+          tasksPerDay[dueDate] = (tasksPerDay[dueDate] ?? 0) + 1;
+        }
       }
-    }
 
-    return tasksPerDay;
-  } catch (e) {
-    print('Error al obtener las tareas por día: $e');
-    return {};
+      return tasksPerDay;
+    } catch (e) {
+      debugPrint('Error al obtener las tareas por día: $e');
+      return {};
+    }
   }
-}
 
   static Future<void> guardarDatosJSON(Task task) async {
-    final url = Uri.parse('http://localhost:5000/guardar_json');
+    final url = Uri.parse('http://192.168.1.6:5000/guardar_json');
     try {
       // Convierte la tarea a JSON
       final taskJson = task.toJson();
@@ -48,21 +53,21 @@ class DataManager {
 
       // Verifica el estado de la respuesta
       if (respuesta.statusCode == 200) {
-        print('Tarea guardada exitosamente en el servidor.');
+        debugPrint('Tarea guardada exitosamente en el servidor.');
       } else {
-        print('Error al guardar la tarea: ${respuesta.statusCode}');
+        debugPrint('Error al guardar la tarea: ${respuesta.statusCode}');
       }
     } on TimeoutException catch (_) {
-      print('Error: La solicitud ha excedido el tiempo de espera.');
+      debugPrint('Error: La solicitud ha excedido el tiempo de espera.');
     } on SocketException catch (_) {
-      print('Error: No se pudo conectar con el servidor.');
+      debugPrint('Error: No se pudo conectar con el servidor.');
     } catch (e) {
-      print('Error inesperado: $e');
+      debugPrint('Error inesperado: $e');
     }
   }
 
   static Future<List<Task>> leerDatosJSON() async {
-    final url = Uri.parse('http://127.0.0.1:5000/leer_json');
+    final url = Uri.parse('http://192.168.1.6:5000/leer_json');
     try {
       // Realiza la solicitud HTTP con un tiempo de espera
       final respuesta = await http
@@ -79,18 +84,18 @@ class DataManager {
             .toList();
       }
     } on TimeoutException catch (_) {
-      print('Error: La solicitud ha excedido el tiempo de espera.');
+      debugPrint('Error: La solicitud ha excedido el tiempo de espera.');
     } on SocketException catch (_) {
-      print('Error: No se pudo conectar con el servidor.');
+      debugPrint('Error: No se pudo conectar con el servidor.');
     } catch (e) {
-      print('Error inesperado: $e');
+      debugPrint('Error inesperado: $e');
     }
     // Retornar una lista vacía en caso de error
     return [];
   }
 
   static Future<List<String>> leerCategorias() async {
-    final url = Uri.parse('http://127.0.0.1:5000/leer_categorias');
+    final url = Uri.parse('http://192.168.1.6:5000/leer_categorias');
     try {
       // Realiza la solicitud HTTP con un tiempo de espera
       final respuesta = await http
@@ -106,21 +111,21 @@ class DataManager {
         // Extraer los valores de la clave "name" de cada objeto
         return data.map((item) => item['name'] as String).toList();
       } else {
-        print('Error al leer las categorías: ${respuesta.statusCode}');
+        debugPrint('Error al leer las categorías: ${respuesta.statusCode}');
       }
     } on TimeoutException catch (_) {
-      print('Error: La solicitud ha excedido el tiempo de espera.');
+      debugPrint('Error: La solicitud ha excedido el tiempo de espera.');
     } on SocketException catch (_) {
-      print('Error: No se pudo conectar con el servidor.');
+      debugPrint('Error: No se pudo conectar con el servidor.');
     } catch (e) {
-      print('Error inesperado: $e');
+      debugPrint('Error inesperado: $e');
     }
     // Retornar una lista vacía en caso de error
     return [];
   }
 
   static Future<bool> eliminarTarea(String tareaId) async {
-    final url = Uri.parse('http://127.0.0.1:5000/eliminar_tarea/$tareaId');
+    final url = Uri.parse('http://192.168.1.6:5000/eliminar_tarea/$tareaId');
     try {
       // Realiza la solicitud HTTP DELETE
       final respuesta = await http
@@ -130,24 +135,24 @@ class DataManager {
           ); // Tiempo de espera de 10 segundos
 
       if (respuesta.statusCode == 200) {
-        print('Tarea eliminada exitosamente.');
+        debugPrint('Tarea eliminada exitosamente.');
         return true;
       } else {
-        print('Error al eliminar la tarea: ${respuesta.statusCode}');
+        debugPrint('Error al eliminar la tarea: ${respuesta.statusCode}');
       }
     } on TimeoutException catch (_) {
-      print('Error: La solicitud ha excedido el tiempo de espera.');
+      debugPrint('Error: La solicitud ha excedido el tiempo de espera.');
     } on SocketException catch (_) {
-      print('Error: No se pudo conectar con el servidor.');
+      debugPrint('Error: No se pudo conectar con el servidor.');
     } catch (e) {
-      print('Error inesperado: $e');
+      debugPrint('Error inesperado: $e');
     }
     return false; // Retorna false en caso de error
   }
 
   static Future<bool> eliminarCategoria(String categoriaNombre) async {
     final url = Uri.parse(
-      'http://127.0.0.1:5000/eliminar_categoria/$categoriaNombre',
+      'http://192.168.1.6:5000/eliminar_categoria/$categoriaNombre',
     );
     try {
       // Realiza la solicitud HTTP DELETE
@@ -158,17 +163,17 @@ class DataManager {
           ); // Tiempo de espera de 10 segundos
 
       if (respuesta.statusCode == 200) {
-        print('Categoría eliminada exitosamente.');
+        debugPrint('Categoría eliminada exitosamente.');
         return true;
       } else {
-        print('Error al eliminar la categoría: ${respuesta.statusCode}');
+        debugPrint('Error al eliminar la categoría: ${respuesta.statusCode}');
       }
     } on TimeoutException catch (_) {
-      print('Error: La solicitud ha excedido el tiempo de espera.');
+      debugPrint('Error: La solicitud ha excedido el tiempo de espera.');
     } on SocketException catch (_) {
-      print('Error: No se pudo conectar con el servidor.');
+      debugPrint('Error: No se pudo conectar con el servidor.');
     } catch (e) {
-      print('Error inesperado: $e');
+      debugPrint('Error inesperado: $e');
     }
     return false; // Retorna false en caso de error
   }
@@ -180,13 +185,13 @@ class DataManager {
       // Luego guarda la tarea con los cambios realizados
       try {
         await guardarDatosJSON(tarea);
-        print('Tarea editada exitosamente.');
+        debugPrint('Tarea editada exitosamente.');
         return true;
       } catch (e) {
-        print('Error al guardar la tarea editada: $e');
+        debugPrint('Error al guardar la tarea editada: $e');
       }
     } else {
-      print('Error al eliminar la tarea para editarla.');
+      debugPrint('Error al eliminar la tarea para editarla.');
     }
     return false; // Retorna false si algo falla
   }

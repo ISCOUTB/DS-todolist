@@ -18,27 +18,32 @@ class TaskNotifier extends ChangeNotifier {
   }
 
   Future<void> eliminarTarea(String tareaId) async {
-  final resultado = await DataManager.eliminarTarea(tareaId);
-  if (resultado) {
-    await loadTasks(); // Recarga las tareas después de eliminar una
-    notifyListeners();
+    final resultado = await DataManager.eliminarTarea(tareaId);
+    if (resultado) {
+      await loadTasks(); // Recarga las tareas después de eliminar una
+      notifyListeners();
+    }
   }
-}
 
   Future<void> eliminarCategoria(String categoriaNombre) async {
-  final resultado = await DataManager.eliminarCategoria(categoriaNombre);
-  if (resultado) {
-    // Aquí puedes recargar las categorías si es necesario
+    final resultado = await DataManager.eliminarCategoria(categoriaNombre);
+    if (resultado) {
+      // Aquí puedes recargar las categorías si es necesario
+      notifyListeners();
+    }
+  }
+
+  Future<void> editarTarea(Task tarea) async {
+    final resultado = await DataManager.editarTarea(tarea);
+    if (resultado) {
+      await loadTasks(); // Recarga las tareas después de editar una
+      notifyListeners();
+    }
+  }
+
+  Future<void> toggleTaskCompletion(String id, bool isCompleted) async {
+    final task = tasks.firstWhere((task) => task.id == id);
+    task.completed = isCompleted;
     notifyListeners();
   }
-}
-  
-  Future<void> editarTarea(Task tarea) async {
-      final resultado = await DataManager.editarTarea(tarea);
-      if (resultado) {
-        await loadTasks(); // Recarga las tareas después de editar una
-        notifyListeners();
-      }
-    }
-
 }

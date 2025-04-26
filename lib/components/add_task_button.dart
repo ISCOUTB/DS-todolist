@@ -16,7 +16,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  List<String> _categories = [
+  final List<String> _categories = [
     "General",
     "Trabajo",
     "Personal",
@@ -123,7 +123,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
                                       value: category,
                                       child: Text(category),
                                     );
-                                  }).toList(),
+                                  }),
                                   DropdownMenuItem<String>(
                                     value: "add_new",
                                     child: Row(
@@ -185,7 +185,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
   }
 
   void _showAddCategoryDialog(BuildContext context) {
-    final TextEditingController _categoryController = TextEditingController();
+    final TextEditingController categoryController = TextEditingController();
 
     showDialog(
       context: context,
@@ -193,7 +193,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
         return AlertDialog(
           title: Text("Añadir nueva categoría"),
           content: TextField(
-            controller: _categoryController,
+            controller: categoryController,
             decoration: InputDecoration(
               labelText: "Nombre de la categoría",
               border: OutlineInputBorder(),
@@ -208,7 +208,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
             ),
             ElevatedButton(
               onPressed: () {
-                final newCategory = _categoryController.text.trim();
+                final newCategory = categoryController.text.trim();
                 if (newCategory.isNotEmpty) {
                   setState(() {
                     _categories.add(newCategory);
@@ -235,7 +235,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
         dueDate: _dueDate,
         completed: _isCompleted,
         createdAt: DateTime.now(),
-        category: "General",
+        category: _selectedCategory ?? "General", // Usa la categoría seleccionada o "General" por defecto
       );
 
       try {
