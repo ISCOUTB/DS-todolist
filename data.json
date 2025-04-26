@@ -1,0 +1,33 @@
+{
+    "tasks": [
+        {
+            "id": "6c880a88-2018-4915-a4ba-2e5b024bf5a2",
+            "title": "funciona y no se toca",
+            "description": "como funciona el programa no se toca weon",
+            "dueDate": "2025-04-30T00:00:00.000",
+            "completed": false,
+            "createdAt": "2025-04-16T11:20:59.263",
+            "category": "General"
+        }
+    ],
+    "categories": [
+        {
+            "name": "Trabajo"
+        },
+        {
+            "name": "Personal"
+        },
+        {
+            "name": "Estudios"
+        },
+        {
+            "name": "Compras"
+        },
+        {
+            "name": "Salud"
+        },
+        {
+            "name": "General"
+        }
+    ]
+}

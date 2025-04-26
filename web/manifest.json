@@ -1,6 +1,6 @@
 {
-    "name": "naming_app",
-    "short_name": "naming_app",
+    "name": "to_do_list",
+    "short_name": "to_do_list",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
