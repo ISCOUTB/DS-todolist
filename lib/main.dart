@@ -6,6 +6,7 @@ import 'package:to_do_list/firebase_options.dart';
 import 'package:to_do_list/screens/home_page.dart';
 import 'package:to_do_list/services/task_notifier.dart';
 import 'package:get/get.dart';
+import 'package:to_do_list/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(debugShowCheckedModeBanner: false, home: HomePage());
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.darkTheme,
+      home: HomePage(),
+    );
   }
 }

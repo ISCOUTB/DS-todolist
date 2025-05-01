@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:path_provider/path_provider.dart';
 import 'task.dart';
-import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DataManager {
@@ -35,8 +33,9 @@ class DataManager {
   // Cargar tareas iniciales desde assets (solo si no hay datos en SharedPreferences)
   static Future<List<Task>> _loadInitialTasksFromAssets() async {
     try {
-      final String response =
-          await rootBundle.loadString('data/tasks_data.json');
+      final String response = await rootBundle.loadString(
+        'data/tasks_data.json',
+      );
       final Map<String, dynamic> data = json.decode(response);
       return (data['tasks'] as List)
           .map((task) => Task.fromJson(task))

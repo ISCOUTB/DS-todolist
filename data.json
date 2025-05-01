@@ -1,13 +1,22 @@
 {
     "tasks": [
         {
-            "id": "6c880a88-2018-4915-a4ba-2e5b024bf5a2",
-            "title": "funciona y no se toca",
-            "description": "como funciona el programa no se toca weon",
+            "id": "d614f02c-873f-44eb-adea-3788cc8c6efd",
+            "title": "tarea personal",
+            "description": "prueba 1",
             "dueDate": "2025-04-30T00:00:00.000",
             "completed": false,
-            "createdAt": "2025-04-16T11:20:59.263",
-            "category": "General"
+            "createdAt": "2025-04-26T21:45:45.454",
+            "category": "Personal"
+        },
+        {
+            "id": "89a01f81-6c68-4474-8dd2-6ff143822103",
+            "title": "tarea salud",
+            "description": "prueba 2",
+            "dueDate": "2025-04-29T00:00:00.000",
+            "completed": false,
+            "createdAt": "2025-04-26T21:46:39.565",
+            "category": "Salud"
         }
     ],
     "categories": [
@@ -25,9 +34,6 @@
         },
         {
             "name": "Salud"
-        },
-        {
-            "name": "General"
         }
     ]
 }
