@@ -1,6 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:to_do_list/services/data_manager.dart';
+import 'package:to_do_list/services/task_notifier.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({super.key});
@@ -48,6 +50,40 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   },
                 ),
               ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.add),
+                title: AutoSizeText(
+                  'Agregar Categoría',
+                  minFontSize: 18,
+                  maxFontSize: 25,
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                onTap: () {
+                  // Aquí puedes agregar la lógica para agregar una nueva categoría
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Agregar Categoría'),
+                        content: TextField(
+                          onSubmitted: (value) async {
+                            await DataManager.agregarCategoria(value);
+                            _loadCategories(); // Recargar categorías después de agregar
+                            Navigator.of(context).pop();
+                          },
+                          decoration: const InputDecoration(
+                            hintText: 'Nombre de la categoría',
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             ],
           );
         }
@@ -55,18 +91,26 @@ class _DrawerWidgetState extends State<DrawerWidget> {
     );
   }
 
-  Widget buildHeader(double fontSize) => DrawerHeader(
-    decoration: const BoxDecoration(color: Colors.blue),
-    child: Container(
-      alignment: AlignmentDirectional.bottomStart,
-      child: AutoSizeText(
-        'Categories',
-        minFontSize: 22,
-        maxFontSize: 30,
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: fontSize,
-          fontWeight: FontWeight.bold,
+  Widget buildHeader(double fontSize) => GestureDetector(
+    onTap: () {
+      // Aquí puedes agregar la lógica para manejar el toque en el encabezado
+      context
+          .read<TaskNotifier>()
+          .loadTasks(); // Recargar tareas al tocar el encabezado
+    },
+    child: DrawerHeader(
+      decoration: const BoxDecoration(color: Colors.blue),
+      child: Container(
+        alignment: AlignmentDirectional.bottomStart,
+        child: AutoSizeText(
+          'Categorías',
+          minFontSize: 22,
+          maxFontSize: 30,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: fontSize,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     ),
@@ -80,9 +124,15 @@ class _DrawerWidgetState extends State<DrawerWidget> {
       maxFontSize: 25,
       style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500),
     ),
-    onTap: () {
-      // Handle category selection
-      //print('Selected Category: $categoryName');
+    onTap: () async {
+      debugPrint('Selected category: $categoryName');
+      final filteredTasks = await DataManager.leerCategoriasFiltradas(
+        categoryName,
+      );
+
+      debugPrint('Filtered tasks: $filteredTasks');
+
+      context.read<TaskNotifier>().loadFilteredTasks(filteredTasks);
     },
   );
 }

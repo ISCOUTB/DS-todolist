@@ -2,17 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:to_do_list/models/task.dart';
 import 'package:http/http.dart' as http;
 
 class DataManager {
-  static Future<List<String>> loadCategories() async {
-    final String response = await rootBundle.loadString('data/categories.json');
-    final List<dynamic> data = json.decode(response);
-    return data.cast<String>();
-  }
-
   static Future<Map<DateTime, int>> getTasksPerDay() async {
     try {
       // Obtiene las tareas desde el servidor
@@ -39,7 +32,7 @@ class DataManager {
   }
 
   static Future<void> guardarDatosJSON(Task task) async {
-    final url = Uri.parse('http://192.168.1.6:5000/guardar_json');
+    final url = Uri.parse('http://192.168.1.3:5000/guardar_json');
     try {
       // Convierte la tarea a JSON
       final taskJson = task.toJson();
@@ -67,7 +60,7 @@ class DataManager {
   }
 
   static Future<List<Task>> leerDatosJSON() async {
-    final url = Uri.parse('http://192.168.1.6:5000/leer_json');
+    final url = Uri.parse('http://192.168.1.3:5000/leer_json');
     try {
       // Realiza la solicitud HTTP con un tiempo de espera
       final respuesta = await http
@@ -95,7 +88,7 @@ class DataManager {
   }
 
   static Future<List<String>> leerCategorias() async {
-    final url = Uri.parse('http://192.168.1.6:5000/leer_categorias');
+    final url = Uri.parse('http://192.168.1.3:5000/leer_categorias');
     try {
       // Realiza la solicitud HTTP con un tiempo de espera
       final respuesta = await http
@@ -124,8 +117,40 @@ class DataManager {
     return [];
   }
 
+  static Future<bool> agregarCategoria(String categoriaNombre) async {
+    final url = Uri.parse('http://192.168.1.3:5000/agregar_categoria');
+    try {
+      // Realiza la solicitud HTTP POST con el nombre de la categoría en el cuerpo
+      final respuesta = await http
+          .post(
+            url,
+            body: jsonEncode(categoriaNombre), // Enviar el nombre como JSON
+            headers: {
+              'Content-Type': 'application/json',
+            }, // Especificar el tipo de contenido
+          )
+          .timeout(
+            const Duration(seconds: 10),
+          ); // Tiempo de espera de 10 segundos
+
+      if (respuesta.statusCode == 200) {
+        debugPrint('Categoría agregada exitosamente.');
+        return true;
+      } else {
+        debugPrint('Error al agregar la categoría: ${respuesta.statusCode}');
+      }
+    } on TimeoutException catch (_) {
+      debugPrint('Error: La solicitud ha excedido el tiempo de espera.');
+    } on SocketException catch (_) {
+      debugPrint('Error: No se pudo conectar con el servidor.');
+    } catch (e) {
+      debugPrint('Error inesperado: $e');
+    }
+    return false; // Retorna false en caso de error
+  }
+
   static Future<bool> eliminarTarea(String tareaId) async {
-    final url = Uri.parse('http://192.168.1.6:5000/eliminar_tarea/$tareaId');
+    final url = Uri.parse('http://192.168.1.3:5000/eliminar_tarea/$tareaId');
     try {
       // Realiza la solicitud HTTP DELETE
       final respuesta = await http
@@ -152,7 +177,7 @@ class DataManager {
 
   static Future<bool> eliminarCategoria(String categoriaNombre) async {
     final url = Uri.parse(
-      'http://192.168.1.6:5000/eliminar_categoria/$categoriaNombre',
+      'http://192.168.1.3:5000/eliminar_categoria/$categoriaNombre',
     );
     try {
       // Realiza la solicitud HTTP DELETE
@@ -194,5 +219,43 @@ class DataManager {
       debugPrint('Error al eliminar la tarea para editarla.');
     }
     return false; // Retorna false si algo falla
+  }
+
+  static Future<List<Task>> leerCategoriasFiltradas(
+    String nombreCategoria,
+  ) async {
+    final url = Uri.parse(
+      'http://192.168.1.3:5000/buscar_categoria/$nombreCategoria',
+    );
+    try {
+      final respuesta = await http
+          .get(url)
+          .timeout(const Duration(seconds: 10));
+
+      if (respuesta.statusCode == 200) {
+        final decodedData = jsonDecode(respuesta.body);
+
+        // Verificar si la respuesta es una lista
+        if (decodedData is List) {
+          return decodedData.map((task) => Task.fromJson(task)).toList();
+        } else if (decodedData is Map<String, dynamic> &&
+            decodedData['tasks'] is List) {
+          return (decodedData['tasks'] as List)
+              .map((task) => Task.fromJson(task))
+              .toList();
+        }
+      } else {
+        debugPrint(
+          'Error al leer las categorías filtradas: ${respuesta.statusCode}',
+        );
+      }
+    } on TimeoutException catch (_) {
+      debugPrint('Error: La solicitud ha excedido el tiempo de espera.');
+    } on SocketException catch (_) {
+      debugPrint('Error: No se pudo conectar con el servidor.');
+    } catch (e) {
+      debugPrint('Error inesperado: $e');
+    }
+    return [];
   }
 }

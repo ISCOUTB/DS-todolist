@@ -31,12 +31,7 @@ class _HomePageState extends State<HomePage> {
     final isDesktop = ResponsiveWidget.isDesktop(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: SearchTextfield(),
-        actions: [
-          AddTaskButton(),
-        ],
-      ),
+      appBar: AppBar(title: SearchTextfield(), actions: [AddTaskButton()]),
       drawer: isMobile ? const Drawer(child: DrawerWidget()) : null,
       body: _views[_currentIndex],
       bottomNavigationBar:

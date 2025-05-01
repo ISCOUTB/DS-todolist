@@ -25,6 +25,11 @@ class TaskNotifier extends ChangeNotifier {
     }
   }
 
+  Future<void> loadFilteredTasks(List<Task> filteredtasks) async {
+    _tasks = filteredtasks;
+    notifyListeners(); // Notifica a los widgets que los datos han cambiado
+  }
+
   Future<void> eliminarCategoria(String categoriaNombre) async {
     final resultado = await DataManager.eliminarCategoria(categoriaNombre);
     if (resultado) {

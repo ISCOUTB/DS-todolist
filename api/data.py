@@ -2,6 +2,17 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
 
+def buscar_categoria(nombre_categoria):
+    tareas = leer_json('data.json')
+    tareasfiltradas: dict = []
+    try:
+        for tarea in tareas["tasks"]:
+            if tarea["category"] == nombre_categoria:
+                tareasfiltradas.append(tarea)
+        return tareasfiltradas
+    except (FileNotFoundError, json.JSONDecodeError):
+        return tareasfiltradas  # Retornar un diccionario vacío con "tasks" si no existe o está vacío
+    
 # Escribir datos en un archivo JSON
 def escribir_json(nombre_archivo, datos):
     try:
@@ -144,6 +155,11 @@ def eliminar_tarea(tarea_id):
 def eliminar_categoria(categoria_nombre):
     resultado = eliminar_categoriajson('data.json', categoria_nombre)
     return jsonify(resultado)
+
+@app.route('/buscar_categoria/<nombre_categoria>', methods=['GET'])
+def buscar_categoria_route(nombre_categoria):
+    tareas = buscar_categoria(nombre_categoria)
+    return jsonify({"tasks": tareas})  # Envolver la lista en un diccionario
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)

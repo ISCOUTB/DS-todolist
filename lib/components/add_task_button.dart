@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:to_do_list/components/categories_selector.dart';
 import 'package:to_do_list/models/task.dart';
 import 'package:to_do_list/services/task_notifier.dart';
 import 'package:uuid/uuid.dart';
@@ -16,11 +17,6 @@ class _AddTaskButtonState extends State<AddTaskButton> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final List<String> _categories = [
-    "General",
-    "Trabajo",
-    "Personal",
-  ]; // Lista inicial de categorías
   DateTime? _dueDate;
   bool _isCompleted = false;
   String? _selectedCategory; // Categoría seleccionada
@@ -76,7 +72,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
                               labelText: 'Descripción',
                               border: OutlineInputBorder(),
                             ),
-                            maxLines: 3,
+                            maxLines: 2,
                           ),
                           SizedBox(height: 15),
                           ListTile(
@@ -102,51 +98,13 @@ class _AddTaskButtonState extends State<AddTaskButton> {
                             },
                           ),
                           SizedBox(height: 15),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Categoria",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                              DropdownButton<String>(
-                                value: _selectedCategory,
-                                isExpanded: true,
-                                hint: Text("Seleccionar categoría"),
-                                items: [
-                                  ..._categories.map((category) {
-                                    return DropdownMenuItem<String>(
-                                      value: category,
-                                      child: Text(category),
-                                    );
-                                  }),
-                                  DropdownMenuItem<String>(
-                                    value: "add_new",
-                                    child: Row(
-                                      children: const [
-                                        Icon(Icons.add, color: Colors.blue),
-                                        SizedBox(width: 8),
-                                        Text("Añadir nueva categoría"),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                                onChanged: (value) {
-                                  if (value == "add_new") {
-                                    _showAddCategoryDialog(context);
-                                  } else {
-                                    setState(() {
-                                      _selectedCategory = value;
-                                    });
-                                  }
-                                },
-                              ),
-                            ],
+
+                          CategoriesSelector(
+                            onCategorySelected: (selectedCategory) {
+                              _selectedCategory = selectedCategory;
+                            },
                           ),
+
                           SizedBox(height: 20),
                           GestureDetector(
                             onTap: addTask,
@@ -184,47 +142,6 @@ class _AddTaskButtonState extends State<AddTaskButton> {
     );
   }
 
-  void _showAddCategoryDialog(BuildContext context) {
-    final TextEditingController categoryController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Añadir nueva categoría"),
-          content: TextField(
-            controller: categoryController,
-            decoration: InputDecoration(
-              labelText: "Nombre de la categoría",
-              border: OutlineInputBorder(),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Cierra el diálogo
-              },
-              child: Text("Cancelar"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final newCategory = categoryController.text.trim();
-                if (newCategory.isNotEmpty) {
-                  setState(() {
-                    _categories.add(newCategory);
-                    _selectedCategory = newCategory;
-                  });
-                }
-                Navigator.pop(context); // Cierra el diálogo
-              },
-              child: Text("Añadir"),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void addTask() {
     if (_formKey.currentState!.validate()) {
       final String uniqueId = Uuid().v4(); // Genera un UUID único
@@ -235,7 +152,9 @@ class _AddTaskButtonState extends State<AddTaskButton> {
         dueDate: _dueDate,
         completed: _isCompleted,
         createdAt: DateTime.now(),
-        category: _selectedCategory ?? "General", // Usa la categoría seleccionada o "General" por defecto
+        category:
+            _selectedCategory ??
+            "General", // Usa la categoría seleccionada o "General" por defecto
       );
 
       try {
