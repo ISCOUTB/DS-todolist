@@ -26,7 +26,7 @@ def escribir_json(nombre_archivo, datos):
 
     # Agregar nuevos datos
     if isinstance(datos, dict):
-        datos_existentes["tasks"].append(datos)  # Agregar el nuevo objeto a la lista "tasks"
+        datos_existentes["tasks"].append(datos) # Agregar el nuevo objeto a la lista "tasks"
     elif isinstance(datos, list):
         datos_existentes["tasks"].extend(datos)  # Agregar múltiples objetos si es una lista
     else:
@@ -139,7 +139,12 @@ def obtener_categorias():
 
 @app.route('/agregar_categoria', methods=['POST'])
 def nueva_categoria():
-    nueva_categoria = request.json.get('categoria')  # Obtener la categoría del cuerpo de la solicitud
+    # Obtener el nombre de la categoría directamente del cuerpo de la solicitud
+    if request.is_json:
+        nueva_categoria = request.get_json()  # Si es JSON, obtener el contenido directamente
+    else:
+        nueva_categoria = request.data.decode('utf-8')  # Si no es JSON, decodificar el cuerpo como texto
+
     if not nueva_categoria:
         return jsonify({'mensaje': 'La categoría es requerida.'}), 400
 
@@ -162,4 +167,5 @@ def buscar_categoria_route(nombre_categoria):
     return jsonify({"tasks": tareas})  # Envolver la lista en un diccionario
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Inicia la aplicación Flask
+    app.run(host="0.0.0.0", port=5000)

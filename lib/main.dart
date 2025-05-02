@@ -6,12 +6,13 @@ import 'package:to_do_list/firebase_options.dart';
 import 'package:to_do_list/screens/home_page.dart';
 import 'package:to_do_list/services/task_notifier.dart';
 import 'package:get/get.dart';
-import 'package:to_do_list/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     MultiProvider(
       providers: [
@@ -30,7 +31,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
       home: HomePage(),
     );
   }

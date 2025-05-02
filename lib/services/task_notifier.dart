@@ -9,11 +9,16 @@ class TaskNotifier extends ChangeNotifier {
 
   Future<void> loadTasks() async {
     _tasks = await DataManager.leerDatosJSON();
-    notifyListeners(); // Notifica a los widgets que los datos han cambiado
-  }
-
-  Future<void> loadFilteredTasks(List<Task> filteredtasks) async {
-    _tasks = filteredtasks;
+    _tasks.sort((a, b) {
+      if (a.dueDate == null && b.dueDate == null)
+        return 0; // Ambos son nulos, no hay orden
+      if (a.dueDate == null) return 1; // a es nulo, b no, a va después
+      if (b.dueDate == null) return -1; // b es nulo, a no, b va después
+      return a.dueDate!.compareTo(
+        b.dueDate!,
+      ); // Ordena por fecha de vencimiento
+    });
+    // Ordena las tareas por fecha de vencimiento
     notifyListeners(); // Notifica a los widgets que los datos han cambiado
   }
 
@@ -28,6 +33,20 @@ class TaskNotifier extends ChangeNotifier {
       await loadTasks(); // Recarga las tareas después de eliminar una
       notifyListeners();
     }
+  }
+
+  Future<void> loadFilteredTasks(List<Task> filteredtasks) async {
+    _tasks = filteredtasks;
+    _tasks.sort((a, b) {
+      if (a.dueDate == null && b.dueDate == null)
+        return 0; // Ambos son nulos, no hay orden
+      if (a.dueDate == null) return 1; // a es nulo, b no, a va después
+      if (b.dueDate == null) return -1; // b es nulo, a no, b va después
+      return a.dueDate!.compareTo(
+        b.dueDate!,
+      ); // Ordena por fecha de vencimiento
+    });
+    notifyListeners(); // Notifica a los widgets que los datos han cambiado
   }
 
   Future<void> eliminarCategoria(String categoriaNombre) async {
@@ -46,7 +65,7 @@ class TaskNotifier extends ChangeNotifier {
     }
   }
 
-  void toggleTaskCompletion(String id, bool isCompleted) {
+  Future<void> toggleTaskCompletion(String id, bool isCompleted) async {
     final task = tasks.firstWhere((task) => task.id == id);
     task.completed = isCompleted;
     notifyListeners();

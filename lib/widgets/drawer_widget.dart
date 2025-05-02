@@ -35,7 +35,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return const Center(child: Text('Error al cargar categorías'));
+          return const Center(child: Text('Error loading categories'));
         } else {
           final categories = snapshot.data ?? [];
           return Column(
@@ -50,6 +50,40 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   },
                 ),
               ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.add),
+                title: AutoSizeText(
+                  'Agregar Categoría',
+                  minFontSize: 18,
+                  maxFontSize: 25,
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                onTap: () {
+                  // Aquí puedes agregar la lógica para agregar una nueva categoría
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Agregar Categoría'),
+                        content: TextField(
+                          onSubmitted: (value) async {
+                            await DataManager.agregarCategoria(value);
+                            _loadCategories(); // Recargar categorías después de agregar
+                            Navigator.of(context).pop();
+                          },
+                          decoration: const InputDecoration(
+                            hintText: 'Nombre de la categoría',
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             ],
           );
         }
@@ -59,10 +93,13 @@ class _DrawerWidgetState extends State<DrawerWidget> {
 
   Widget buildHeader(double fontSize) => GestureDetector(
     onTap: () {
-      context.read<TaskNotifier>().loadTasks(); // Cargar todas las tareas
+      // Aquí puedes agregar la lógica para manejar el toque en el encabezado
+      context
+          .read<TaskNotifier>()
+          .loadTasks(); // Recargar tareas al tocar el encabezado
     },
     child: DrawerHeader(
-      decoration: BoxDecoration(color: Colors.grey),
+      decoration: const BoxDecoration(color: Colors.blue),
       child: Container(
         alignment: AlignmentDirectional.bottomStart,
         child: AutoSizeText(
@@ -88,14 +125,13 @@ class _DrawerWidgetState extends State<DrawerWidget> {
       style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500),
     ),
     onTap: () async {
-      print('Selected category: $categoryName');
+      debugPrint('Selected category: $categoryName');
       final filteredTasks = await DataManager.leerCategoriasFiltradas(
         categoryName,
       );
 
-      print('Filtered tasks: $filteredTasks');
+      debugPrint('Filtered tasks: $filteredTasks');
 
-      // ignore: use_build_context_synchronously
       context.read<TaskNotifier>().loadFilteredTasks(filteredTasks);
     },
   );
