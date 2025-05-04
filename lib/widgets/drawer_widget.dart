@@ -134,5 +134,35 @@ class _DrawerWidgetState extends State<DrawerWidget> {
 
       context.read<TaskNotifier>().loadFilteredTasks(filteredTasks);
     },
+    onLongPress: () {
+      // Aquí puedes agregar la lógica para eliminar la categoría
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Eliminar Categoría'),
+            content: Text(
+              '¿Estás seguro de que deseas eliminar $categoryName?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  await DataManager.eliminarCategoria(categoryName);
+                  _loadCategories(); // Recargar categorías después de eliminar
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Eliminar'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancelar'),
+              ),
+            ],
+          );
+        },
+      );
+    },
   );
 }

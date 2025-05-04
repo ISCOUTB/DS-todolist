@@ -32,7 +32,7 @@ class DataManager {
   }
 
   static Future<void> guardarDatosJSON(Task task) async {
-    final url = Uri.parse('http://192.168.1.3:5000/guardar_json');
+    final url = Uri.parse('http://172.191.195.204:5000/guardar_json');
     try {
       // Convierte la tarea a JSON
       final taskJson = task.toJson();
@@ -60,7 +60,7 @@ class DataManager {
   }
 
   static Future<List<Task>> leerDatosJSON() async {
-    final url = Uri.parse('http://192.168.1.3:5000/leer_json');
+    final url = Uri.parse('http://172.191.195.204:5000/leer_json');
     try {
       // Realiza la solicitud HTTP con un tiempo de espera
       final respuesta = await http
@@ -88,7 +88,7 @@ class DataManager {
   }
 
   static Future<List<String>> leerCategorias() async {
-    final url = Uri.parse('http://192.168.1.3:5000/leer_categorias');
+    final url = Uri.parse('http://172.191.195.204:5000/leer_categorias');
     try {
       // Realiza la solicitud HTTP con un tiempo de espera
       final respuesta = await http
@@ -118,7 +118,7 @@ class DataManager {
   }
 
   static Future<bool> agregarCategoria(String categoriaNombre) async {
-    final url = Uri.parse('http://192.168.1.3:5000/agregar_categoria');
+    final url = Uri.parse('http://172.191.195.204:5000/agregar_categoria');
     try {
       // Realiza la solicitud HTTP POST con el nombre de la categoría en el cuerpo
       final respuesta = await http
@@ -150,7 +150,9 @@ class DataManager {
   }
 
   static Future<bool> eliminarTarea(String tareaId) async {
-    final url = Uri.parse('http://192.168.1.3:5000/eliminar_tarea/$tareaId');
+    final url = Uri.parse(
+      'http://172.191.195.204:5000/eliminar_tarea/$tareaId',
+    );
     try {
       // Realiza la solicitud HTTP DELETE
       final respuesta = await http
@@ -177,7 +179,7 @@ class DataManager {
 
   static Future<bool> eliminarCategoria(String categoriaNombre) async {
     final url = Uri.parse(
-      'http://192.168.1.3:5000/eliminar_categoria/$categoriaNombre',
+      'http://172.191.195.204:5000/eliminar_categoria/$categoriaNombre',
     );
     try {
       // Realiza la solicitud HTTP DELETE
@@ -225,7 +227,7 @@ class DataManager {
     String nombreCategoria,
   ) async {
     final url = Uri.parse(
-      'http://192.168.1.3:5000/buscar_categoria/$nombreCategoria',
+      'http://172.191.195.204:5000/buscar_categoria/$nombreCategoria',
     );
     try {
       final respuesta = await http

@@ -21,22 +21,22 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
   @override
   void initState() {
     super.initState();
+    _loadCategories();
 
-    if (widget.selectedCategory != null) {
+    if (widget.selectedCategory != null &&
+        _categories.contains(widget.selectedCategory!)) {
       _selectedCategory = widget.selectedCategory;
     } else {
       _selectedCategory =
           null; // Inicializa con null si no hay categoría seleccionada
     }
-
-    _loadCategories();
   }
 
   void _loadCategories() async {
     try {
       final categories = await DataManager.leerCategorias();
       setState(() {
-        _categories = categories;
+        _categories = categories.toSet().toList(); // Elimina duplicados
       });
     } catch (e) {
       debugPrint('Error al cargar las categorías: $e');

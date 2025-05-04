@@ -2,9 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 void errorSnackbar(String message) {
-  Get.snackbar("Error", message,
+  Get.snackbar(
+    "Error",
+    message,
     snackPosition: SnackPosition.BOTTOM,
     backgroundColor: Colors.red,
     colorText: Colors.white,
@@ -18,8 +19,13 @@ class FirebaseAuthService {
       return;
     }
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-      Get.snackbar("Éxito", "Inicio de sesión exitoso",
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      Get.snackbar(
+        "Éxito",
+        "Inicio de sesión exitoso",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green,
         colorText: Colors.white,
@@ -47,9 +53,14 @@ class FirebaseAuthService {
       return;
     }
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
       await FirebaseAuth.instance.currentUser!.sendEmailVerification();
-      Get.snackbar("Éxito", "Registro exitoso. Verifica tu email.",
+      Get.snackbar(
+        "Éxito",
+        "Registro exitoso. Verifica tu email.",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green,
         colorText: Colors.white,
@@ -77,7 +88,9 @@ class FirebaseAuthService {
     }
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      Get.snackbar("Éxito", "Correo de restablecimiento enviado.",
+      Get.snackbar(
+        "Éxito",
+        "Correo de restablecimiento enviado.",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green,
         colorText: Colors.white,
@@ -87,7 +100,8 @@ class FirebaseAuthService {
         errorSnackbar('No user found for that email.');
       } else {
         errorSnackbar('Error sending password reset email: ${e.code}');
-      };
+      }
+      ;
     } catch (e) {
       errorSnackbar('Error inesperado: $e');
     }
@@ -100,7 +114,9 @@ class FirebaseAuthService {
     }
     try {
       await FirebaseAuth.instance.currentUser!.sendEmailVerification();
-      Get.snackbar("Email enviado", "Revisa tu bandeja de entrada",
+      Get.snackbar(
+        "Email enviado",
+        "Revisa tu bandeja de entrada",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green,
         colorText: Colors.white,

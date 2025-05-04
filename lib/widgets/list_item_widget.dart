@@ -44,7 +44,8 @@ class ListItemWidget extends StatelessWidget {
                     'Vence: ${task.dueDate?.day}/${task.dueDate?.month}/${task.dueDate?.year}',
                     style: TextStyle(
                       color:
-                          task.dueDate!.isBefore(DateTime.now()) &&
+                          task.dueDate != null &&
+                                  task.dueDate!.isBefore(DateTime.now()) &&
                                   !task.completed
                               ? Colors.red
                               : null,
