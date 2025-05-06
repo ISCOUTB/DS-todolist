@@ -46,7 +46,7 @@ app.*.map.json
 
 
 #Api Keys
-.env# Miscellaneous
+.env
 *.class
 *.log
 *.pyc
