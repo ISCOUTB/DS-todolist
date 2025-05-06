@@ -22,11 +22,13 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
   void initState() {
     super.initState();
     _loadCategories();
+
     if (widget.selectedCategory != null &&
-        _categories.contains(widget.selectedCategory)) {
+        _categories.contains(widget.selectedCategory!)) {
       _selectedCategory = widget.selectedCategory;
     } else {
-      _selectedCategory = null; // Inicializa con null si no coincide
+      _selectedCategory =
+          null; // Inicializa con null si no hay categoría seleccionada
     }
   }
 
@@ -34,7 +36,7 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
     try {
       final categories = await DataManager.leerCategorias();
       setState(() {
-        _categories = categories.toSet().toList();
+        _categories = categories.toSet().toList(); // Elimina duplicados
       });
     } catch (e) {
       debugPrint('Error al cargar las categorías: $e');
@@ -75,13 +77,11 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
           onChanged: (value) {
             if (value == "add_new") {
               _showAddCategoryDialog(context);
-            } else if (_categories.contains(value)) {
+            } else {
               setState(() {
                 _selectedCategory = value;
               });
               widget.onCategorySelected(value); // Notifica el cambio
-            } else {
-              debugPrint('La categoría seleccionada ya no está disponible.');
             }
           },
         ),

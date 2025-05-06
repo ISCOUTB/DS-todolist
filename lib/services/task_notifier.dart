@@ -9,16 +9,6 @@ class TaskNotifier extends ChangeNotifier {
 
   Future<void> loadTasks() async {
     _tasks = await DataManager.leerDatosJSON();
-    _tasks.sort((a, b) {
-      if (a.dueDate == null && b.dueDate == null)
-        return 0; // Ambos son nulos, no hay orden
-      if (a.dueDate == null) return 1; // a es nulo, b no, a va después
-      if (b.dueDate == null) return -1; // b es nulo, a no, b va después
-      return a.dueDate!.compareTo(
-        b.dueDate!,
-      ); // Ordena por fecha de vencimiento
-    });
-    // Ordena las tareas por fecha de vencimiento
     notifyListeners(); // Notifica a los widgets que los datos han cambiado
   }
 
@@ -37,15 +27,6 @@ class TaskNotifier extends ChangeNotifier {
 
   Future<void> loadFilteredTasks(List<Task> filteredtasks) async {
     _tasks = filteredtasks;
-    _tasks.sort((a, b) {
-      if (a.dueDate == null && b.dueDate == null)
-        return 0; // Ambos son nulos, no hay orden
-      if (a.dueDate == null) return 1; // a es nulo, b no, a va después
-      if (b.dueDate == null) return -1; // b es nulo, a no, b va después
-      return a.dueDate!.compareTo(
-        b.dueDate!,
-      ); // Ordena por fecha de vencimiento
-    });
     notifyListeners(); // Notifica a los widgets que los datos han cambiado
   }
 

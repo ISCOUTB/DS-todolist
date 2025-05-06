@@ -1,18 +1,24 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do_list/firebase_options.dart';
 import 'package:to_do_list/screens/home_page.dart';
+import 'package:to_do_list/services/notification_service.dart';
 import 'package:to_do_list/services/task_notifier.dart';
 import 'package:get/get.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseFirestore.instance.settings = const Settings(
+    persistenceEnabled: true,
   );
+
+  NotificationService().initNotification();
+
   runApp(
     MultiProvider(
       providers: [
@@ -29,9 +35,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
-    );
+    return GetMaterialApp(debugShowCheckedModeBanner: false, home: HomePage());
   }
 }
