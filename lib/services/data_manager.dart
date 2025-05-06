@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:to_do_list/models/task.dart';
 import 'package:http/http.dart' as http;
 
@@ -259,5 +260,56 @@ class DataManager {
       debugPrint('Error inesperado: $e');
     }
     return [];
+  }
+
+  static Future<void> guardarDatosHive(List<Task> tasks) async {
+    try {
+      // Abre un Box llamado "tasks"
+      final box = await Hive.openBox('tasks');
+
+      // Convierte la lista de tareas a JSON y guárdala en el Box
+      final tasksJson = tasks.map((task) => task.toJson()).toList();
+      await box.put('tasks', tasksJson);
+
+      debugPrint('Datos guardados exitosamente en Hive.');
+    } catch (e) {
+      debugPrint('Error al guardar datos en Hive: $e');
+    }
+  }
+
+  static Future<List<Task>> leerDatosHive() async {
+    try {
+      // Abre el Box llamado "tasks"
+      final box = await Hive.openBox('tasks');
+
+      // Obtén los datos almacenados como JSON
+      final tasksJson = box.get('tasks', defaultValue: []);
+
+      // Convierte el JSON a una lista de objetos Task
+      final tasks =
+          (tasksJson as List)
+              .map((taskJson) => Task.fromJson(taskJson))
+              .toList();
+
+      debugPrint('Datos leídos exitosamente desde Hive.');
+      return tasks;
+    } catch (e) {
+      debugPrint('Error al leer datos desde Hive: $e');
+      return [];
+    }
+  }
+
+  static Future<void> eliminarDatosHive() async {
+    try {
+      // Abre el Box llamado "tasks"
+      final box = await Hive.openBox('tasks');
+
+      // Elimina los datos almacenados
+      await box.delete('tasks');
+
+      debugPrint('Datos eliminados exitosamente de Hive.');
+    } catch (e) {
+      debugPrint('Error al eliminar datos desde Hive: $e');
+    }
   }
 }

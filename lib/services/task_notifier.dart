@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_list/models/task.dart';
+import 'package:to_do_list/services/api_storage.dart';
 import 'package:to_do_list/services/data_manager.dart';
+import 'package:to_do_list/services/hive_storage.dart';
+import 'package:to_do_list/services/storage_switch.dart';
 
 class TaskNotifier extends ChangeNotifier {
   List<Task> _tasks = [];
+  final storage = StorageSwitch(ApiStorage());
 
   List<Task> get tasks => _tasks;
 
   Future<void> loadTasks() async {
-    _tasks = await DataManager.leerDatosJSON();
+    _tasks = await storage.leerTareas();
     notifyListeners(); // Notifica a los widgets que los datos han cambiado
   }
 
   Future<void> addTask(Task task) async {
-    await DataManager.guardarDatosJSON(task);
+    await storage.guardarTarea(task);
     await loadTasks(); // Recarga las tareas después de añadir una nueva
   }
 
