@@ -25,6 +25,9 @@ jobs:
       - name: Verify Flutter installation
         run: flutter doctor
 
+      - name: Set up Dart SDK
+        run: choco install dart --version=3.7.2
+
       - name: Install dependencies
         run: flutter pub get
 
