@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:to_do_list/components/add_task_button.dart';
 import 'package:to_do_list/components/search_textfield.dart';
 import 'package:to_do_list/components/user_button.dart';
+import 'package:to_do_list/components/filter_button.dart';
 import 'package:to_do_list/widgets/calendar.dart';
 import 'package:to_do_list/widgets/drawer_widget.dart';
 import 'package:to_do_list/widgets/responsive_widget.dart';
@@ -33,8 +34,40 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: SearchTextfield(),
-        actions: [AddTaskButton(), UserButton()],
+        leading:
+            isMobile
+                ? Row(
+                  mainAxisSize:
+                      MainAxisSize.min, // Limita el tamaño del Row al contenido
+                  children: [
+                    Builder(
+                      builder:
+                          (context) => IconButton(
+                            icon: const Icon(Icons.menu),
+                            onPressed: () => Scaffold.of(context).openDrawer(),
+                          ),
+                    ),
+                    const UserButton(), // Botón de usuario a la derecha del Drawer
+                  ],
+                )
+                : const UserButton(), // Botón de usuario en la izquierda para escritorio
+        title:
+            isMobile
+                ? Row(
+                  children: [
+                    Expanded(child: SearchTextfield()), // Barra de búsqueda
+                    AddTaskButton(), // Botón de agregar tarea
+                    const FilterButton(), // Botón de filtro
+                  ],
+                )
+                : SearchTextfield(),
+        actions:
+            isMobile
+                ? null
+                : [
+                  AddTaskButton(), // Botón de agregar tarea solo en escritorio
+                  const FilterButton(), // Botón de filtro
+                ],
       ),
       drawer: isMobile ? const Drawer(child: DrawerWidget()) : null,
       body: _views[_currentIndex],
