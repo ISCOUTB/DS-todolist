@@ -7,10 +7,15 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+
+
 jobs:
   sonarqube:
     name: SonarQube Analysis
     runs-on: windows-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_HOST_URL: 'https://sonarcloud.io'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -52,7 +57,7 @@ jobs:
         run: flutter pub get
 
       - name: Build APK
-        run: flutter build apk
+        run: flutter build web
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
