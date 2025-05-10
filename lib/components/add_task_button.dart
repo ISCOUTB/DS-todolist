@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do_list/models/task.dart';
+import 'package:to_do_list/services/data_manager.dart';
 import 'package:to_do_list/services/task_notifier.dart';
 import 'package:uuid/uuid.dart';
 
@@ -16,14 +17,27 @@ class _AddTaskButtonState extends State<AddTaskButton> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  List<String> _categories = [
-    "General",
-    "Trabajo",
-    "Personal",
-  ]; // Lista inicial de categorías
+  final List<String> _categories = [];
   DateTime? _dueDate;
   bool _isCompleted = false;
   String? _selectedCategory; // Categoría seleccionada
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCategories(); // Carga las categorías al iniciar el widget
+  }
+
+  Future<void> _loadCategories() async {
+    try {
+      final categories = await DataManager.loadCategories();
+      setState(() {
+        _categories.addAll(categories);
+      });
+    } catch (e) {
+      debugPrint('Error al cargar categorías: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,20 +131,26 @@ class _AddTaskButtonState extends State<AddTaskButton> {
                                 value: _selectedCategory,
                                 isExpanded: true,
                                 hint: Text("Seleccionar categoría"),
+                                style: const TextStyle(color: Colors.white),
                                 items: [
                                   ..._categories.map((category) {
                                     return DropdownMenuItem<String>(
                                       value: category,
                                       child: Text(category),
                                     );
-                                  }).toList(),
+                                  }),
                                   DropdownMenuItem<String>(
                                     value: "add_new",
                                     child: Row(
                                       children: const [
-                                        Icon(Icons.add, color: Colors.blue),
+                                        Icon(Icons.add, color: Colors.grey),
                                         SizedBox(width: 8),
-                                        Text("Añadir nueva categoría"),
+                                        Text(
+                                          "Añadir nueva categoría",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -156,7 +176,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
                                 horizontal: 25,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.blue,
+                                color: Colors.grey,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Center(
@@ -185,15 +205,18 @@ class _AddTaskButtonState extends State<AddTaskButton> {
   }
 
   void _showAddCategoryDialog(BuildContext context) {
-    final TextEditingController _categoryController = TextEditingController();
+    final TextEditingController categoryController = TextEditingController();
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Añadir nueva categoría"),
+          title: Text(
+            "Añadir nueva categoría",
+            style: TextStyle(color: Colors.white),
+          ),
           content: TextField(
-            controller: _categoryController,
+            controller: categoryController,
             decoration: InputDecoration(
               labelText: "Nombre de la categoría",
               border: OutlineInputBorder(),
@@ -208,7 +231,7 @@ class _AddTaskButtonState extends State<AddTaskButton> {
             ),
             ElevatedButton(
               onPressed: () {
-                final newCategory = _categoryController.text.trim();
+                final newCategory = categoryController.text.trim();
                 if (newCategory.isNotEmpty) {
                   setState(() {
                     _categories.add(newCategory);
@@ -235,7 +258,9 @@ class _AddTaskButtonState extends State<AddTaskButton> {
         dueDate: _dueDate,
         completed: _isCompleted,
         createdAt: DateTime.now(),
-        category: "General",
+        category:
+            _selectedCategory ??
+            "General", // Usa la categoría seleccionada o "General" por defecto
       );
 
       try {

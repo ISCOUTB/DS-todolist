@@ -16,60 +16,61 @@ class ListItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      elevation: 6,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Column(
-          mainAxisSize: MainAxisSize.min, // Ajusta la altura al contenido
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(6),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 5,
+            offset: Offset(2, 4),
+          ),
+        ],
+      ),
+      child: ListTile(
+        title: Text(
+          task.title,
+          style: TextStyle(
+            decoration:
+                task.completed
+                    ? TextDecoration.lineThrough
+                    : TextDecoration.none,
+          ),
+          maxLines: 1,
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ListTile(
-              title: Text(
-                task.title,
-                style: TextStyle(
-                  decoration:
-                      task.completed
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
-                ),
-                maxLines: 1,
+            if (task.description.isNotEmpty) Text(task.description),
+            Text(
+              'Vence: ${task.dueDate?.day}/${task.dueDate?.month}/${task.dueDate?.year}',
+              style: TextStyle(
+                color:
+                    task.dueDate!.isBefore(DateTime.now()) && !task.completed
+                        ? Colors.red
+                        : null,
               ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (task.description.isNotEmpty) Text(task.description),
-                  Text(
-                    'Vence: ${task.dueDate?.day}/${task.dueDate?.month}/${task.dueDate?.year}',
-                    style: TextStyle(
-                      color:
-                          task.dueDate!.isBefore(DateTime.now()) &&
-                                  !task.completed
-                              ? Colors.red
-                              : null,
-                    ),
-                    maxLines: 1,
-                  ),
-                  if (task.category.isNotEmpty)
-                    Text(
-                      'Categoria: ${task.category}',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                ],
-              ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  EditTaskButton(task: task),
-                  IconButton(icon: Icon(Icons.delete), onPressed: onDelete),
-                  Checkbox(value: task.completed, onChanged: onToggleCompleted),
-                ],
-              ),
+              maxLines: 1,
             ),
+            if (task.category.isNotEmpty)
+              Text(
+                'Categoria: ${task.category}',
+                style: TextStyle(color: Colors.grey),
+              ),
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            EditTaskButton(task: task),
+            IconButton(icon: Icon(Icons.delete), onPressed: onDelete),
+            Checkbox(value: task.completed, onChanged: onToggleCompleted),
           ],
         ),
       ),
     );
   }
 }
+//   @override

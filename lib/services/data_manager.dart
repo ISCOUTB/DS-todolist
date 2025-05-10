@@ -13,25 +13,29 @@ class DataManager {
   }
 
   static Future<Map<DateTime, int>> getTasksPerDay() async {
-  try {
-    // Obtiene las tareas desde el servidor
-    final List<Task> tasks = await leerDatosJSON();
+    try {
+      // Obtiene las tareas desde el servidor
+      final List<Task> tasks = await leerDatosJSON();
 
-    // Procesa las tareas para contar cuántas hay por día
-    final Map<DateTime, int> tasksPerDay = {};
-    for (var task in tasks) {
-      if (task.dueDate != null) {
-        final dueDate = DateTime(task.dueDate!.year, task.dueDate!.month, task.dueDate!.day);
-        tasksPerDay[dueDate] = (tasksPerDay[dueDate] ?? 0) + 1;
+      // Procesa las tareas para contar cuántas hay por día
+      final Map<DateTime, int> tasksPerDay = {};
+      for (var task in tasks) {
+        if (task.dueDate != null) {
+          final dueDate = DateTime(
+            task.dueDate!.year,
+            task.dueDate!.month,
+            task.dueDate!.day,
+          );
+          tasksPerDay[dueDate] = (tasksPerDay[dueDate] ?? 0) + 1;
+        }
       }
-    }
 
-    return tasksPerDay;
-  } catch (e) {
-    print('Error al obtener las tareas por día: $e');
-    return {};
+      return tasksPerDay;
+    } catch (e) {
+      print('Error al obtener las tareas por día: $e');
+      return {};
+    }
   }
-}
 
   static Future<void> guardarDatosJSON(Task task) async {
     final url = Uri.parse('http://localhost:5000/guardar_json');
@@ -190,4 +194,6 @@ class DataManager {
     }
     return false; // Retorna false si algo falla
   }
+
+  static leerCategoriasFiltradas(String categoryName) {}
 }

@@ -68,11 +68,7 @@ class _CalendarState extends State<Calendar> {
                 onDaySelected: _onDaySelected,
                 calendarBuilders: CalendarBuilders(
                   defaultBuilder: (context, day, focusedDay) {
-                    final normalizedDay = DateTime.utc(
-                      day.year,
-                      day.month,
-                      day.day,
-                    );
+                    final normalizedDay = DateTime.utc(day.year, day.month, day.day);
                     final tasks = tasksPerDay[normalizedDay] ?? 0;
                     return Stack(
                       alignment: Alignment.center,
@@ -92,7 +88,7 @@ class _CalendarState extends State<Calendar> {
                                 child: Text(
                                   '$tasks',
                                   style: TextStyle(
-                                    color: const Color.fromARGB(255, 0, 0, 0),
+                                    color: Colors.white,
                                     fontSize: 10,
                                     fontWeight: FontWeight.bold,
                                   ),

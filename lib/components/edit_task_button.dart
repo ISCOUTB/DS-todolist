@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do_list/models/task.dart';
 import 'package:to_do_list/services/task_notifier.dart';
-import 'package:uuid/uuid.dart';
 
 class EditTaskButton extends StatefulWidget {
   final Task task;
@@ -19,7 +18,7 @@ class _EditTaskButtonState extends State<EditTaskButton> {
   final _formKey = GlobalKey<FormState>();
   DateTime? _dueDate;
   bool _isCompleted = false;
-  
+
   @override
   void initState() {
     // TODO: implement initState
@@ -28,9 +27,7 @@ class _EditTaskButtonState extends State<EditTaskButton> {
     _descriptionController.text = widget.task.description;
     _dueDate = widget.task.dueDate;
     _isCompleted = widget.task.completed;
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +124,7 @@ class _EditTaskButtonState extends State<EditTaskButton> {
                                 horizontal: 25,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.blue,
+                                color: Colors.grey,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Center(
