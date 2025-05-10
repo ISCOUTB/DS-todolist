@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "490282095361",
+    "project_id": "to-do-list-9a344",
+    "storage_bucket": "to-do-list-9a344.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490282095361:android:fda0420dfd79d138d40100",
+        "android_client_info": {
+          "package_name": "com.example.to_do_list"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKuDk0QIsOZezOFPuuZqAZjj3mUyeqhy0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
