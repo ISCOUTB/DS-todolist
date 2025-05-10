@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_list/services/data_manager.dart';
+import 'package:provider/provider.dart';
+import 'package:to_do_list/services/task_notifier.dart';
 
 class CategoriesSelector extends StatefulWidget {
   final Function(String?) onCategorySelected; // Callback para notificar cambios
@@ -34,7 +35,8 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
 
   void _loadCategories() async {
     try {
-      final categories = await DataManager.leerCategorias();
+      final storage = Provider.of<TaskNotifier>(context, listen: false).storage;
+      final categories = await storage.leerCategorias();
       setState(() {
         _categories = categories.toSet().toList(); // Elimina duplicados
       });
@@ -115,8 +117,13 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
               onPressed: () async {
                 final newCategory = categoryController.text.trim();
                 if (newCategory.isNotEmpty) {
-                  await DataManager.agregarCategoria(newCategory);
-                  _loadCategories(); // Recargar categorías
+                  await Provider.of<TaskNotifier>(
+                    context,
+                    listen: false,
+                  ).storage.agregarCategoria(newCategory);
+                  _categories.add(newCategory); // Añadir la nueva categoría
+                  _categories =
+                      _categories.toSet().toList(); // Elimina duplicados
                   setState(() {
                     _selectedCategory = newCategory;
                   });

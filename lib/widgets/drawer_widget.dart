@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:to_do_list/services/data_manager.dart';
+import 'package:to_do_list/models/task.dart';
 import 'package:to_do_list/services/task_notifier.dart';
 
 class DrawerWidget extends StatefulWidget {
@@ -21,7 +21,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
   }
 
   void _loadCategories() {
-    _categoriesFuture = DataManager.leerCategorias();
+    final storage = Provider.of<TaskNotifier>(context, listen: false).storage;
+    _categoriesFuture = storage.leerCategorias();
     setState(() {}); // Asegura que el widget se reconstruya
   }
 
@@ -71,7 +72,12 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                         title: const Text('Agregar Categoría'),
                         content: TextField(
                           onSubmitted: (value) async {
-                            await DataManager.agregarCategoria(value);
+                            final storage =
+                                Provider.of<TaskNotifier>(
+                                  context,
+                                  listen: false,
+                                ).storage;
+                            await storage.agregarCategoria(value);
                             _loadCategories(); // Recargar categorías después de agregar
                             Navigator.of(context).pop();
                           },
@@ -126,13 +132,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
     ),
     onTap: () async {
       debugPrint('Selected category: $categoryName');
-      final filteredTasks = await DataManager.leerCategoriasFiltradas(
-        categoryName,
-      );
+      final storage = Provider.of<TaskNotifier>(context, listen: false).storage;
+      final filteredTasks = storage.leerCategoriasFiltradas(categoryName);
 
       debugPrint('Filtered tasks: $filteredTasks');
 
-      context.read<TaskNotifier>().loadFilteredTasks(filteredTasks);
+      context.read<TaskNotifier>().loadFilteredTasks(
+        filteredTasks as List<Task>,
+      );
     },
     onLongPress: () {
       // Aquí puedes agregar la lógica para eliminar la categoría
@@ -147,7 +154,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             actions: [
               TextButton(
                 onPressed: () async {
-                  await DataManager.eliminarCategoria(categoryName);
+                  await context.read<TaskNotifier>().eliminarCategoria(
+                    categoryName,
+                  );
+
                   _loadCategories(); // Recargar categorías después de eliminar
                   Navigator.of(context).pop();
                 },

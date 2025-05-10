@@ -9,4 +9,5 @@ abstract class StorageStrategy {
   Future<bool> agregarCategoria(String categoriaNombre);
   Future<bool> eliminarCategoria(String categoriaNombre);
   Future<List<Task>> leerCategoriasFiltradas(String nombreCategoria);
+  Future<Map<DateTime, int>> getTasksPerDay();
 }

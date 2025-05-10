@@ -47,6 +47,8 @@ class Task {
     );
   }
 
+  get date => null;
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

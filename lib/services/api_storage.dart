@@ -168,4 +168,30 @@ class ApiStorage implements StorageStrategy {
     }
     return false;
   }
+
+  @override
+  Future<Map<DateTime, int>> getTasksPerDay() async {
+    try {
+      // Obtiene las tareas desde el servidor
+      final List<Task> tasks = await leerTareas();
+
+      // Procesa las tareas para contar cuántas hay por día
+      final Map<DateTime, int> tasksPerDay = {};
+      for (var task in tasks) {
+        if (task.dueDate != null) {
+          final dueDate = DateTime(
+            task.dueDate!.year,
+            task.dueDate!.month,
+            task.dueDate!.day,
+          );
+          tasksPerDay[dueDate] = (tasksPerDay[dueDate] ?? 0) + 1;
+        }
+      }
+
+      return tasksPerDay;
+    } catch (e) {
+      debugPrint('Error al obtener las tareas por día: $e');
+      return {};
+    }
+  }
 }
