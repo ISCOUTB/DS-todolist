@@ -13,9 +13,7 @@ jobs:
   sonarqube:
     name: SonarQube Analysis
     runs-on: windows-latest
-    env:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      SONAR_HOST_URL: 'https://sonarcloud.io'
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -63,4 +61,4 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: 'https://your-sonarqube-server.com'
+          SONAR_HOST_URL: 'https://sonarcloud.io'
