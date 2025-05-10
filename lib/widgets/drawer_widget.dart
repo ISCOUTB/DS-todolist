@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:to_do_list/models/task.dart';
+import 'package:to_do_list/services/data_manager.dart';
 import 'package:to_do_list/services/task_notifier.dart';
 
 class DrawerWidget extends StatefulWidget {
@@ -36,7 +36,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return const Center(child: Text('Error loading categories'));
+          return const Center(child: Text('Error al cargar categorías'));
         } else {
           final categories = snapshot.data ?? [];
           return Column(
@@ -99,19 +99,19 @@ class _DrawerWidgetState extends State<DrawerWidget> {
 
   Widget buildHeader(double fontSize) => GestureDetector(
     onTap: () {
-      // Aquí puedes agregar la lógica para manejar el toque en el encabezado
-      context
-          .read<TaskNotifier>()
-          .loadTasks(); // Recargar tareas al tocar el encabezado
+      context.read<TaskNotifier>().loadTasks(); // Cargar todas las tareas
     },
     child: DrawerHeader(
-      decoration: const BoxDecoration(color: Colors.blue),
+      decoration: BoxDecoration(
+        color: Colors.grey,
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Container(
-        alignment: AlignmentDirectional.bottomStart,
+        alignment: AlignmentDirectional.centerStart,
         child: AutoSizeText(
           'Categorías',
-          minFontSize: 22,
-          maxFontSize: 30,
+          minFontSize: 18,
+          maxFontSize: 26,
           style: TextStyle(
             color: Colors.white,
             fontSize: fontSize,
@@ -126,53 +126,20 @@ class _DrawerWidgetState extends State<DrawerWidget> {
     leading: const Icon(Icons.category),
     title: AutoSizeText(
       categoryName, // Mostrar el nombre de la categoría
-      minFontSize: 18,
-      maxFontSize: 25,
+      minFontSize: 14,
+      maxFontSize: 20,
       style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500),
     ),
     onTap: () async {
-      debugPrint('Selected category: $categoryName');
-      final storage = Provider.of<TaskNotifier>(context, listen: false).storage;
-      final filteredTasks = storage.leerCategoriasFiltradas(categoryName);
-
-      debugPrint('Filtered tasks: $filteredTasks');
-
-      context.read<TaskNotifier>().loadFilteredTasks(
-        filteredTasks as List<Task>,
+      print('Selected category: $categoryName');
+      final filteredTasks = await DataManager.leerCategoriasFiltradas(
+        categoryName,
       );
-    },
-    onLongPress: () {
-      // Aquí puedes agregar la lógica para eliminar la categoría
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Eliminar Categoría'),
-            content: Text(
-              '¿Estás seguro de que deseas eliminar $categoryName?',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () async {
-                  await context.read<TaskNotifier>().eliminarCategoria(
-                    categoryName,
-                  );
 
-                  _loadCategories(); // Recargar categorías después de eliminar
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Eliminar'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Cancelar'),
-              ),
-            ],
-          );
-        },
-      );
+      print('Filtered tasks: $filteredTasks');
+
+      // ignore: use_build_context_synchronously
+      context.read<TaskNotifier>().loadFilteredTasks(filteredTasks);
     },
   );
 }

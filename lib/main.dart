@@ -11,20 +11,12 @@ import 'package:to_do_list/services/task_notifier.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:get/get.dart';
+import 'package:to_do_list/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  await Hive.initFlutter(); // Inicializa Hive
-  Hive.registerAdapter(TaskAdapter());
-
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FirebaseFirestore.instance.settings = const Settings(
-    persistenceEnabled: true,
-  );
-
-  NotificationService().initNotification();
-
   runApp(
     MultiProvider(
       providers: [
@@ -41,6 +33,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(debugShowCheckedModeBanner: false, home: HomePage());
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.darkTheme,
+      home: HomePage(),
+    );
   }
 }
