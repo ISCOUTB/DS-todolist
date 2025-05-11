@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart'; // Import for locale initialization
-import 'package:to_do_list/services/data_manager.dart';
+import 'package:to_do_list/services/task_notifier.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({super.key});
@@ -22,7 +23,8 @@ class _CalendarState extends State<Calendar> {
   }
 
   Future<void> _loadTasksPerDay() async {
-    final tasks = await DataManager.getTasksPerDay();
+    final storage = Provider.of<TaskNotifier>(context, listen: false).storage;
+    final tasks = await storage.getTasksPerDay();
     setState(() {
       tasksPerDay = tasks.map((key, value) {
         final normalizedKey = DateTime.utc(key.year, key.month, key.day);

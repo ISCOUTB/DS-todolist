@@ -1,10 +1,28 @@
+import 'package:hive/hive.dart';
+
+part 'task.g.dart'; // Archivo generado automáticamente
+
+@HiveType(typeId: 0) // Asigna un ID único para esta clase
 class Task {
+  @HiveField(0)
   final String id;
+
+  @HiveField(1)
   final String title;
+
+  @HiveField(2)
   final String description;
+
+  @HiveField(3)
   final DateTime? dueDate;
+
+  @HiveField(4)
   bool completed;
+
+  @HiveField(5)
   final DateTime createdAt;
+
+  @HiveField(6)
   final String category;
 
   Task({
@@ -28,6 +46,8 @@ class Task {
       category: json['category'],
     );
   }
+
+  get date => null;
 
   Map<String, dynamic> toJson() {
     return {

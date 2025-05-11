@@ -34,51 +34,22 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading:
-            isMobile
-                ? Row(
-                  mainAxisSize:
-                      MainAxisSize.min, // Limita el tamaño del Row al contenido
-                  children: [
-                    Builder(
-                      builder:
-                          (context) => IconButton(
-                            icon: const Icon(Icons.menu),
-                            onPressed: () => Scaffold.of(context).openDrawer(),
-                          ),
-                    ),
-                    const UserButton(), // Botón de usuario a la derecha del Drawer
-                  ],
-                )
-                : const UserButton(), // Botón de usuario en la izquierda para escritorio
-        title:
-            isMobile
-                ? Row(
-                  children: [
-                    Expanded(child: SearchTextfield()), // Barra de búsqueda
-                    AddTaskButton(), // Botón de agregar tarea
-                    const FilterButton(), // Botón de filtro
-                  ],
-                )
-                : SearchTextfield(),
-        actions:
-            isMobile
-                ? null
-                : [
-                  AddTaskButton(), // Botón de agregar tarea solo en escritorio
-                  const FilterButton(), // Botón de filtro
-                ],
+        title: SearchTextfield(),
+        actions: [FilterButton(), UserButton()],
       ),
       drawer: isMobile ? const Drawer(child: DrawerWidget()) : null,
       body: _views[_currentIndex],
+      floatingActionButton:
+          _currentIndex == 0
+              ? const AddTaskButton() // Solo muestra el botón en la vista de tareas
+              : null,
       bottomNavigationBar:
           !isDesktop
               ? BottomNavigationBar(
-                currentIndex: _currentIndex, // Índice actual
+                currentIndex: _currentIndex,
                 onTap: (index) {
                   setState(() {
-                    _currentIndex =
-                        index; // Cambia la vista al seleccionar una pestaña
+                    _currentIndex = index;
                   });
                 },
                 items: const [
