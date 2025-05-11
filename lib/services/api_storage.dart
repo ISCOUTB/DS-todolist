@@ -2,14 +2,20 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:to_do_list/models/task.dart';
-import "package:to_do_list/models/storage_strategy.dart";
+import 'package:to_do_list/models/storage_strategy.dart';
+import 'package:to_do_list/models/persistent_identifier.dart';
 
 class ApiStorage implements StorageStrategy {
   final String baseUrl = 'http://172.191.195.204:5000';
 
+  Future<String> _getUuid() async {
+    return await PersistentIdentifier.getDeviceId();
+  }
+
   @override
   Future<void> guardarTarea(Task task) async {
-    final url = Uri.parse('$baseUrl/guardar_json');
+    final uuid = await _getUuid();
+    final url = Uri.parse('$baseUrl/guardar_json/$uuid');
     try {
       final taskJson = {'datos': task.toJson()};
       debugPrint('JSON enviado: ${jsonEncode(taskJson)}');
@@ -35,7 +41,8 @@ class ApiStorage implements StorageStrategy {
 
   @override
   Future<List<Task>> leerTareas() async {
-    final url = Uri.parse('$baseUrl/leer_json');
+    final uuid = await _getUuid();
+    final url = Uri.parse('$baseUrl/leer_json/$uuid');
     try {
       final respuesta = await http.get(url);
       if (respuesta.statusCode == 200) {
@@ -52,7 +59,8 @@ class ApiStorage implements StorageStrategy {
 
   @override
   Future<bool> eliminarTarea(String tareaId) async {
-    final url = Uri.parse('$baseUrl/eliminar_tarea/$tareaId');
+    final uuid = await _getUuid();
+    final url = Uri.parse('$baseUrl/eliminar_tarea/$uuid/$tareaId');
     try {
       final respuesta = await http.delete(url);
       if (respuesta.statusCode == 200) {
@@ -69,7 +77,8 @@ class ApiStorage implements StorageStrategy {
 
   @override
   Future<bool> eliminarCategoria(String categoriaNombre) async {
-    final url = Uri.parse('$baseUrl/eliminar_categoria/$categoriaNombre');
+    final uuid = await _getUuid();
+    final url = Uri.parse('$baseUrl/eliminar_categoria/$uuid/$categoriaNombre');
     try {
       final respuesta = await http.delete(url);
       if (respuesta.statusCode == 200) {
@@ -103,7 +112,8 @@ class ApiStorage implements StorageStrategy {
 
   @override
   Future<List<Task>> leerCategoriasFiltradas(String nombreCategoria) async {
-    final url = Uri.parse('$baseUrl/buscar_categoria/$nombreCategoria');
+    final uuid = await _getUuid();
+    final url = Uri.parse('$baseUrl/buscar_categoria/$uuid/$nombreCategoria');
     try {
       final respuesta = await http.get(url);
       if (respuesta.statusCode == 200) {
@@ -132,7 +142,8 @@ class ApiStorage implements StorageStrategy {
 
   @override
   Future<List<String>> leerCategorias() async {
-    final url = Uri.parse('$baseUrl/leer_categorias');
+    final uuid = await _getUuid();
+    final url = Uri.parse('$baseUrl/leer_categorias/$uuid');
     try {
       final respuesta = await http.get(url);
       if (respuesta.statusCode == 200) {
@@ -149,11 +160,12 @@ class ApiStorage implements StorageStrategy {
 
   @override
   Future<bool> agregarCategoria(String categoriaNombre) async {
-    final url = Uri.parse('$baseUrl/agregar_categoria');
+    final uuid = await _getUuid();
+    final url = Uri.parse('$baseUrl/agregar_categoria/$uuid');
     try {
       final respuesta = await http.post(
         url,
-        body: jsonEncode(categoriaNombre),
+        body: jsonEncode({"name": categoriaNombre}),
         headers: {'Content-Type': 'application/json'},
       );
 
