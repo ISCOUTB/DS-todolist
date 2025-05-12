@@ -21,15 +21,20 @@ class TaskNotifier extends ChangeNotifier {
   }
 
   Future<void> eliminarTarea(String tareaId) async {
-    final resultado = await DataManager.eliminarTarea(tareaId);
+    final resultado = await storage.eliminarTarea(tareaId);
     if (resultado) {
       await loadTasks(); // Recarga las tareas después de eliminar una
       notifyListeners();
     }
   }
 
+  Future<void> loadFilteredTasks(List<Task> filteredtasks) async {
+    _tasks = filteredtasks;
+    notifyListeners(); // Notifica a los widgets que los datos han cambiado
+  }
+
   Future<void> eliminarCategoria(String categoriaNombre) async {
-    final resultado = await DataManager.eliminarCategoria(categoriaNombre);
+    final resultado = await storage.eliminarCategoria(categoriaNombre);
     if (resultado) {
       // Aquí puedes recargar las categorías si es necesario
       notifyListeners();
@@ -37,14 +42,24 @@ class TaskNotifier extends ChangeNotifier {
   }
 
   Future<void> editarTarea(Task tarea) async {
-    final resultado = await DataManager.editarTarea(tarea);
+    final resultado = await storage.editarTarea(tarea);
     if (resultado) {
       await loadTasks(); // Recarga las tareas después de editar una
       notifyListeners();
     }
   }
 
-  void loadFilteredTasks(filteredTasks) {}
+  Future<void> toggleTaskCompletion(String id, bool isCompleted) async {
+    final task = tasks.firstWhere((task) => task.id == id);
+    task.completed = isCompleted;
+    notifyListeners();
+  }
 
-  void toggleTaskCompletion(String id, bool bool) {}
+  Future<Map<DateTime, int>> getTasksPerDay() async {
+    final tasksPerDay = await storage.getTasksPerDay();
+    return tasksPerDay.map((key, value) {
+      final normalizedKey = DateTime.utc(key.year, key.month, key.day);
+      return MapEntry(normalizedKey, value);
+    });
+  }
 }

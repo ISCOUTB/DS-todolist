@@ -11,7 +11,7 @@ class TaskWidget extends StatelessWidget {
     final tasks = context.watch<TaskNotifier>().tasks;
 
     return Container(
-      color: const Color.fromARGB(255, 0, 0, 0),
+      color: Colors.grey[200],
       child:
           tasks.isEmpty
               ? const Center(child: Text('No hay tareas disponibles'))

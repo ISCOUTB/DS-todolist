@@ -29,6 +29,8 @@ class _EditTaskButtonState extends State<EditTaskButton> {
     _descriptionController.text = widget.task.description;
     _dueDate = widget.task.dueDate;
     _isCompleted = widget.task.completed;
+    _createdAt = widget.task.createdAt;
+    _category = widget.task.category;
   }
 
   @override
@@ -101,42 +103,41 @@ class _EditTaskButtonState extends State<EditTaskButton> {
                                   lastDate: DateTime(2100),
                                 );
 
-                              if (picked != null && picked != _dueDate) {
-                                setModalState(() {
-                                  _dueDate = picked;
-                                });
-                              }
-                            },
-                          ),
-                          SizedBox(height: 15),
-                          CheckboxListTile(
-                            title: Text('Completada'),
-                            value: _isCompleted,
-                            onChanged: (bool? value) {
-                              setModalState(() {
-                                _isCompleted = value ?? false;
-                              });
-                            },
-                          ),
-                          SizedBox(height: 20),
-                          GestureDetector(
-                            onTap: editTask,
-                            child: Container(
-                              padding: const EdgeInsets.all(25),
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 25,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Editar tarea",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
+                                if (picked != null && picked != _dueDate) {
+                                  setModalState(() {
+                                    _dueDate = picked;
+                                  });
+                                }
+                              },
+                            ),
+                            SizedBox(height: 15),
+                            CategoriesSelector(
+                              selectedCategory: _category,
+                              onCategorySelected: (onCategorySelected) {
+                                _category = onCategorySelected;
+                              },
+                            ),
+                            SizedBox(height: 20),
+
+                            GestureDetector(
+                              onTap: editTask,
+                              child: Container(
+                                padding: const EdgeInsets.all(25),
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 25,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Editar tarea",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ),
                               ),
