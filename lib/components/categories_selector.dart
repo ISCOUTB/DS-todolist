@@ -5,7 +5,7 @@ import 'package:to_do_list/services/task_notifier.dart';
 class CategoriesSelector extends StatefulWidget {
   final Function(String?) onCategorySelected; // Callback para notificar cambios
   final String? selectedCategory; // Categoría seleccionada
-  CategoriesSelector({
+  const CategoriesSelector({
     super.key,
     required this.onCategorySelected,
     this.selectedCategory,
@@ -45,6 +45,7 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
