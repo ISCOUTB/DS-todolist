@@ -1,4 +1,8 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:io';
+import 'package:flutter/foundation.dart'; // Para kIsWeb
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:to_do_list/models/task.dart';
 import 'package:to_do_list/services/api_storage.dart';
 import 'package:to_do_list/services/storage_switch.dart';
@@ -6,9 +10,55 @@ import 'package:to_do_list/services/task_sorter.dart';
 
 class TaskNotifier extends ChangeNotifier {
   List<Task> _tasks = [];
-  final storage = StorageSwitch(ApiStorage());
+  List<String> _categories = [];
+
+  late StorageSwitch storage;
+  Timer? _syncTimer;
+
+  TaskNotifier() {
+    _initializeStorage();
+  }
 
   List<Task> get tasks => _tasks;
+  List<String> get categories => _categories;
+
+  Future<void> _initializeStorage() async {
+    if (kIsWeb) {
+      // Si está en la web, usa la API
+      storage = StorageSwitch(ApiStorage());
+    } else if (Platform.isAndroid) {
+      // Si está en Android, usa Hive
+      storage = StorageSwitch(HiveStorage());
+
+      // Configura la sincronización con la API cada hora si hay conexión
+      _startSyncWithApi();
+    } else {
+      // Por defecto, usa Hive
+      storage = StorageSwitch(HiveStorage());
+    }
+  }
+
+  Future<void> _startSyncWithApi() async {
+    // Cancela el temporizador anterior si existe
+    _syncTimer?.cancel();
+
+    final connectivity = Connectivity();
+    final firebaseAuth = FirebaseAuth.instance;
+
+    _syncTimer = Timer.periodic(const Duration(hours: 1), (timer) async {
+      final connectivityResult = await connectivity.checkConnectivity();
+      final isConnected = connectivityResult != ConnectivityResult.none;
+
+      if (isConnected && firebaseAuth.currentUser != null) {
+        // Si hay conexión y el usuario ha iniciado sesión en Firebase, sincroniza con la API
+        final apiStorage = ApiStorage();
+        for (final task in _tasks) {
+          await apiStorage.guardarTarea(task);
+        }
+        debugPrint('Datos sincronizados con la API.');
+      }
+    });
+  }
 
   Future<void> loadTasks() async {
     _tasks = await storage.leerTareas();
@@ -62,5 +112,20 @@ class TaskNotifier extends ChangeNotifier {
       final normalizedKey = DateTime.utc(key.year, key.month, key.day);
       return MapEntry(normalizedKey, value);
     });
+  }
+
+  Future<void> loadCategories() async {
+    try {
+      _categories = await storage.leerCategorias();
+      notifyListeners(); // Notifica a los widgets dependientes
+    } catch (e) {
+      debugPrint('Error al cargar las categorías: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    _syncTimer?.cancel();
+    super.dispose();
   }
 }
