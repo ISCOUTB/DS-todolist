@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_list/models/task.dart';
 import 'package:to_do_list/services/api_storage.dart';
-import 'package:to_do_list/services/hive_storage.dart';
 import 'package:to_do_list/services/storage_switch.dart';
+import 'package:to_do_list/services/task_sorter.dart';
 
 class TaskNotifier extends ChangeNotifier {
   List<Task> _tasks = [];
@@ -12,6 +12,7 @@ class TaskNotifier extends ChangeNotifier {
 
   Future<void> loadTasks() async {
     _tasks = await storage.leerTareas();
+    _tasks = await TaskSorter.sortTasksByDueDate(_tasks);
     notifyListeners(); // Notifica a los widgets que los datos han cambiado
   }
 

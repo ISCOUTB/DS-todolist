@@ -2,19 +2,33 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:to_do_list/models/task.dart';
 import 'package:to_do_list/services/hive_storage.dart';
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
+import 'package:path_provider_platform_interface/src/method_channel_path_provider.dart';
 
-void main() async {
+class MockPathProvider extends PathProviderPlatform {
+  @override
+  Future<String> getApplicationDocumentsPath() async {
+    return '.';
+  }
+}
+
+void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter();
 
-  Hive.registerAdapter(TaskAdapter());
+  setUpAll(() async {
+    // Registra el mock para path_provider
+    PathProviderPlatform.instance = MockPathProvider();
+
+    await Hive.initFlutter();
+    Hive.registerAdapter(TaskAdapter());
+    await Hive.openBox<Task>('tasks');
+  });
 
   group('HiveStorage', () {
     late HiveStorage hiveStorage;
 
-    setUp(() async {
+    setUp(() {
       hiveStorage = HiveStorage();
-      await Hive.openBox<Task>('tasks');
     });
 
     tearDown(() async {

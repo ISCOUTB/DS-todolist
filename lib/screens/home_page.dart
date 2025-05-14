@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:to_do_list/components/add_task_button.dart';
 import 'package:to_do_list/components/search_textfield.dart';
 import 'package:to_do_list/components/user_button.dart';
-import 'package:to_do_list/components/filter_button.dart';
+import 'package:to_do_list/components/sorter_button.dart';
 import 'package:to_do_list/widgets/calendar.dart';
 import 'package:to_do_list/widgets/drawer_widget.dart';
 import 'package:to_do_list/widgets/responsive_widget.dart';
@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: SearchTextfield(),
-        actions: [FilterButton(), UserButton()],
+        actions: [SorterButton(), UserButton()],
       ),
       drawer: isMobile ? const Drawer(child: DrawerWidget()) : null,
       body: _views[_currentIndex],
