@@ -10,6 +10,8 @@ import 'package:to_do_list/services/storage_switch.dart';
 
 class TaskNotifier extends ChangeNotifier {
   List<Task> _tasks = [];
+  List<String> _categories = [];
+
   late StorageSwitch storage;
   Timer? _syncTimer;
 
@@ -18,6 +20,7 @@ class TaskNotifier extends ChangeNotifier {
   }
 
   List<Task> get tasks => _tasks;
+  List<String> get categories => _categories;
 
   Future<void> _initializeStorage() async {
     if (kIsWeb) {
@@ -108,6 +111,15 @@ class TaskNotifier extends ChangeNotifier {
       final normalizedKey = DateTime.utc(key.year, key.month, key.day);
       return MapEntry(normalizedKey, value);
     });
+  }
+
+  Future<void> loadCategories() async {
+    try {
+      _categories = await storage.leerCategorias();
+      notifyListeners(); // Notifica a los widgets dependientes
+    } catch (e) {
+      debugPrint('Error al cargar las categorías: $e');
+    }
   }
 
   @override

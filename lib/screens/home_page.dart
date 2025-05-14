@@ -17,6 +17,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0; // Índice de la vista seleccionada
+  bool _isDesktop = false; // Estado para rastrear si estamos en escritorio
 
   final List<Widget> _views = [
     ResponsiveWidget(
@@ -29,8 +30,21 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = ResponsiveWidget.isMobile(context);
     final isDesktop = ResponsiveWidget.isDesktop(context);
+
+    // Detecta el cambio a la vista de escritorio
+    if (isDesktop && !_isDesktop) {
+      setState(() {
+        _isDesktop = true;
+        _currentIndex = 0; // Cambia automáticamente a la vista principal
+      });
+    } else if (!isDesktop && _isDesktop) {
+      setState(() {
+        _isDesktop = false;
+      });
+    }
+
+    final isMobile = ResponsiveWidget.isMobile(context);
 
     return Scaffold(
       appBar: AppBar(

@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:to_do_list/models/task.dart';
 import 'package:to_do_list/services/task_notifier.dart';
 
 class DrawerWidget extends StatefulWidget {
@@ -21,7 +20,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
   }
 
   void _loadCategories() {
-    final storage = Provider.of<TaskNotifier>(context, listen: false).storage;
+    final storage = context.read<TaskNotifier>().storage;
     _categoriesFuture = storage.leerCategorias();
     setState(() {}); // Asegura que el widget se reconstruya
   }
@@ -78,6 +77,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                   listen: false,
                                 ).storage;
                             await storage.agregarCategoria(value);
+                            if (!mounted) return; // <--- chequeo de seguridad
+
                             _loadCategories(); // Recargar categorías después de agregar
                             Navigator.of(context).pop();
                           },
@@ -133,13 +134,12 @@ class _DrawerWidgetState extends State<DrawerWidget> {
     onTap: () async {
       debugPrint('Selected category: $categoryName');
       final storage = Provider.of<TaskNotifier>(context, listen: false).storage;
-      final filteredTasks = storage.leerCategoriasFiltradas(categoryName);
+      final filteredTasks = await storage.leerCategoriasFiltradas(categoryName);
+
+      if (!mounted) return; // <--- chequeo de seguridad
 
       debugPrint('Filtered tasks: $filteredTasks');
-
-      context.read<TaskNotifier>().loadFilteredTasks(
-        filteredTasks as List<Task>,
-      );
+      context.read<TaskNotifier>().loadFilteredTasks(filteredTasks);
     },
     onLongPress: () {
       // Aquí puedes agregar la lógica para eliminar la categoría
@@ -157,6 +157,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   await context.read<TaskNotifier>().eliminarCategoria(
                     categoryName,
                   );
+
+                  if (!mounted) return; // <--- chequeo de seguridad
 
                   _loadCategories(); // Recargar categorías después de eliminar
                   Navigator.of(context).pop();

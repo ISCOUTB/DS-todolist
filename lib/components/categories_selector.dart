@@ -122,6 +122,13 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
                     context,
                     listen: false,
                   ).storage.agregarCategoria(newCategory);
+
+                  // Notifica a TaskNotifier que las categorías han cambiado
+                  Provider.of<TaskNotifier>(
+                    context,
+                    listen: false,
+                  ).loadCategories();
+
                   _categories.add(newCategory); // Añadir la nueva categoría
                   _categories =
                       _categories.toSet().toList(); // Elimina duplicados
