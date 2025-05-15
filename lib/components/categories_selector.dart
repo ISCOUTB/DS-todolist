@@ -69,7 +69,7 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
               value: "add_new",
               child: Row(
                 children: const [
-                  Icon(Icons.add, color: Colors.blue),
+                  Icon(Icons.add, color: Colors.white),
                   SizedBox(width: 8),
                   Text("Añadir nueva categoría"),
                 ],

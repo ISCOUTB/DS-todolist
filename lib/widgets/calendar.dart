@@ -49,6 +49,27 @@ class _CalendarState extends State<Calendar> {
             // Prevent overflow by constraining the widget
             child: SingleChildScrollView(
               child: TableCalendar(
+                calendarStyle: CalendarStyle(
+                  selectedDecoration: BoxDecoration(
+                    color:
+                        Colors.white, // Fondo blanco para el día seleccionado
+                    shape: BoxShape.circle,
+                  ),
+                  selectedTextStyle: TextStyle(
+                    color: Colors.black, // Texto negro para contraste
+                    fontWeight: FontWeight.bold,
+                  ),
+                  todayDecoration: BoxDecoration(
+                    color:
+                        Colors
+                            .blueGrey, // Día actual no seleccionado: fondo blueGrey
+                    shape: BoxShape.circle,
+                  ),
+                  todayTextStyle: TextStyle(
+                    color: Colors.white, // Texto blanco para el día actual
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 locale: "es_CO",
                 rowHeight: 45,
                 headerStyle: HeaderStyle(
@@ -88,7 +109,7 @@ class _CalendarState extends State<Calendar> {
                               height: 16,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Colors.blue,
+                                color: Colors.grey,
                               ),
                               child: Center(
                                 child: Text(

@@ -24,111 +24,114 @@ class _ListItemWidgetState extends State<ListItemWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      elevation: 6,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Column(
-          mainAxisSize: MainAxisSize.min, // Ajusta la altura al contenido
+    return Container(
+      // Contenedor para el ListTile de las tareas
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: Color.fromARGB(69, 170, 170, 170),
+        borderRadius: BorderRadius.circular(6),
+        boxShadow: [
+          BoxShadow(
+            color: const Color.fromARGB(
+              255,
+              100,
+              100,
+              100,
+            ).withOpacity(0.2), // Sombra más suave
+            blurRadius: 8, // Difuminado
+            offset: Offset(2, 4), // Desplazamiento horizontal y vertical
+          ),
+        ],
+      ),
+      child: ListTile(
+        title: GestureDetector(
+          onTap: () {
+            setState(() {
+              _isTitleExpanded = !_isTitleExpanded;
+            });
+          },
+          child: AnimatedCrossFade(
+            duration: const Duration(milliseconds: 200),
+            firstChild: Text(
+              widget.task.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                decoration:
+                    widget.task.completed
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+              ),
+            ),
+            secondChild: Text(
+              widget.task.title,
+              style: TextStyle(
+                decoration:
+                    widget.task.completed
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+              ),
+            ),
+            crossFadeState:
+                _isTitleExpanded
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
+          ),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ListTile(
-              title: GestureDetector(
+            if (widget.task.description.isNotEmpty)
+              GestureDetector(
                 onTap: () {
                   setState(() {
-                    _isTitleExpanded = !_isTitleExpanded; // Alterna el estado
+                    _isExpanded = !_isExpanded;
                   });
                 },
                 child: AnimatedCrossFade(
                   duration: const Duration(milliseconds: 200),
                   firstChild: Text(
-                    widget.task.title,
-                    maxLines: 1, // Muestra solo 1 línea
-                    overflow: TextOverflow.ellipsis, // Agrega "..."
-                    style: TextStyle(
-                      decoration:
-                          widget.task.completed
-                              ? TextDecoration.lineThrough
-                              : TextDecoration.none,
-                    ),
+                    widget.task.description,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  secondChild: Text(
-                    widget.task.title,
-                    style: TextStyle(
-                      decoration:
-                          widget.task.completed
-                              ? TextDecoration.lineThrough
-                              : TextDecoration.none,
-                    ),
-                  ), // Muestra todo el título
+                  secondChild: Text(widget.task.description),
                   crossFadeState:
-                      _isTitleExpanded
+                      _isExpanded
                           ? CrossFadeState.showSecond
                           : CrossFadeState.showFirst,
                 ),
               ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (widget.task.description.isNotEmpty)
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _isExpanded = !_isExpanded; // Alterna el estado
-                        });
-                      },
-                      child: AnimatedCrossFade(
-                        duration: const Duration(milliseconds: 200),
-                        firstChild: Text(
-                          widget.task.description,
-                          maxLines: 3, // Muestra solo 3 líneas
-                          overflow: TextOverflow.ellipsis, // Agrega "..."
-                        ),
-                        secondChild: Text(
-                          widget.task.description,
-                        ), // Muestra todo
-                        crossFadeState:
-                            _isExpanded
-                                ? CrossFadeState.showSecond
-                                : CrossFadeState.showFirst,
-                      ),
-                    ),
-                  Text(
-                    'Vence: ${widget.task.dueDate?.day}/${widget.task.dueDate?.month}/${widget.task.dueDate?.year}',
-                    style: TextStyle(
-                      color:
-                          widget.task.dueDate != null &&
-                                  widget.task.dueDate!.isBefore(
-                                    DateTime.now(),
-                                  ) &&
-                                  !widget.task.completed
-                              ? Colors.red
-                              : null,
-                    ),
-                    maxLines: 1,
-                  ),
-                  if (widget.task.category.isNotEmpty)
-                    Text(
-                      'Categoria: ${widget.task.category}',
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                ],
+            Text(
+              'Vence: ${widget.task.dueDate?.day}/${widget.task.dueDate?.month}/${widget.task.dueDate?.year}',
+              style: TextStyle(
+                color:
+                    widget.task.dueDate != null &&
+                            widget.task.dueDate!.isBefore(DateTime.now()) &&
+                            !widget.task.completed
+                        ? Colors.red
+                        : null,
               ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  EditTaskButton(task: widget.task),
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: widget.onDelete,
-                  ),
-                  Checkbox(
-                    value: widget.task.completed,
-                    onChanged: widget.onToggleCompleted,
-                  ),
-                ],
+              maxLines: 1,
+            ),
+            if (widget.task.category.isNotEmpty)
+              Text(
+                'Categoria: ${widget.task.category}',
+                style: const TextStyle(color: Colors.grey),
               ),
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            EditTaskButton(task: widget.task),
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: widget.onDelete,
+            ),
+            Checkbox(
+              value: widget.task.completed,
+              onChanged: widget.onToggleCompleted,
             ),
           ],
         ),

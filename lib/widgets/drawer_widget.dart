@@ -64,12 +64,15 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   ),
                 ),
                 onTap: () {
-                  // Aquí puedes agregar la lógica para agregar una nueva categoría
+                  // la lógica para agregar una nueva categoría
                   showDialog(
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        title: const Text('Agregar Categoría'),
+                        title: const Text(
+                          'Agregar Categoría', //Widget cateiora inicio
+                          style: TextStyle(color: Colors.white),
+                        ),
                         content: TextField(
                           onSubmitted: (value) async {
                             final storage =
@@ -83,6 +86,9 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                           },
                           decoration: const InputDecoration(
                             hintText: 'Nombre de la categoría',
+                            hintStyle: TextStyle(
+                              color: Color.fromARGB(255, 0, 0, 0),
+                            ),
                           ),
                         ),
                       );
@@ -105,7 +111,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           .loadTasks(); // Recargar tareas al tocar el encabezado
     },
     child: DrawerHeader(
-      decoration: const BoxDecoration(color: Colors.blue),
+      decoration: const BoxDecoration(
+        color: Color.fromARGB(
+          102,
+          170,
+          170,
+          170,
+        ), // Color de fondo del encabezado de "Categorias"
+      ),
       child: Container(
         alignment: AlignmentDirectional.bottomStart,
         child: AutoSizeText(

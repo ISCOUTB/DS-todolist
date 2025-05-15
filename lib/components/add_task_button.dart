@@ -12,6 +12,7 @@ class AddTaskButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
+      backgroundColor: Colors.grey,
       onPressed: () {
         showModalBottomSheet(
           context: context,
@@ -80,6 +81,13 @@ class _AddTaskFormState extends State<AddTaskForm> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
+      decoration: const BoxDecoration(
+        color: Color.fromARGB(102, 170, 170, 170),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
       child: Form(
         key: _formKey,
         child: Column(
@@ -91,9 +99,14 @@ class _AddTaskFormState extends State<AddTaskForm> {
             ),
             const SizedBox(height: 20),
             TextFormField(
+              style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
               controller: _titleController,
               decoration: const InputDecoration(
-                labelText: 'Título',
+                hintText: 'Título',
+                hintStyle: TextStyle(
+                  //colorColor.fromARGB(255, 64, 64, 64)anco
+                  color: Color.fromARGB(255, 0, 0, 0),
+                ),
                 border: OutlineInputBorder(),
               ),
               validator: (value) {
@@ -105,9 +118,11 @@ class _AddTaskFormState extends State<AddTaskForm> {
             ),
             const SizedBox(height: 15),
             TextFormField(
+              style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
               controller: _descriptionController,
               decoration: const InputDecoration(
-                labelText: 'Descripción',
+                hintText: 'Descripción',
+                hintStyle: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                 border: OutlineInputBorder(),
               ),
               maxLines: 2,
@@ -148,7 +163,7 @@ class _AddTaskFormState extends State<AddTaskForm> {
                 padding: const EdgeInsets.all(25),
                 margin: const EdgeInsets.symmetric(horizontal: 25),
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: Colors.grey,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Center(
