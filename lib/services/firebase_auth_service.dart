@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+const String exito = 'Éxito';
+
 void errorSnackbar(String message) {
   Get.snackbar(
     "Error",
@@ -24,7 +26,7 @@ class FirebaseAuthService {
         password: password,
       );
       Get.snackbar(
-        "Éxito",
+        exito,
         "Inicio de sesión exitoso",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green,
@@ -59,7 +61,7 @@ class FirebaseAuthService {
       );
       await FirebaseAuth.instance.currentUser!.sendEmailVerification();
       Get.snackbar(
-        "Éxito",
+        exito,
         "Registro exitoso. Verifica tu email.",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green,
@@ -89,7 +91,7 @@ class FirebaseAuthService {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       Get.snackbar(
-        "Éxito",
+        exito,
         "Correo de restablecimiento enviado.",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green,

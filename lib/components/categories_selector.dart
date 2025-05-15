@@ -54,7 +54,7 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
           "Categoria",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         DropdownButton<String>(
           value: _selectedCategory,
           isExpanded: true,
@@ -66,10 +66,10 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
                 child: Text(category),
               );
             }),
-            DropdownMenuItem<String>(
+            const DropdownMenuItem<String>(
               value: "add_new",
               child: Row(
-                children: const [
+                children: [
                   Icon(Icons.add, color: Colors.blue),
                   SizedBox(width: 8),
                   Text("Añadir nueva categoría"),

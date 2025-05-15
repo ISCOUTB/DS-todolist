@@ -109,7 +109,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           GestureDetector(
-                            onTap: (() => Get.to(() => ForgetPasswordScreen())),
+                            onTap:
+                                (() =>
+                                    Get.to(() => const ForgetPasswordScreen())),
                             child: Text(
                               "Olvidaste tu contraseña?",
                               style: TextStyle(color: Colors.grey[600]),
@@ -177,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(width: 4),
                         GestureDetector(
-                          onTap: (() => Get.to(() => RegisterScreen())),
+                          onTap: (() => Get.to(() => const RegisterScreen())),
                           child: const Text(
                             "Registrate",
                             style: TextStyle(
