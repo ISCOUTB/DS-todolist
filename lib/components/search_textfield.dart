@@ -20,12 +20,18 @@ class SearchTextfield extends StatelessWidget {
       height: 40,
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color.fromARGB(69, 170, 170, 170),
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextField(
+        style: const TextStyle(color: Colors.white), // Letras blancas
         decoration: const InputDecoration(
+          filled: true,
+          fillColor: Color.fromARGB(69, 170, 170, 170), // Fondo gris
           hintText: "Buscar tareas...",
+          hintStyle: TextStyle(
+            color: Color.fromARGB(179, 255, 255, 255),
+          ), // Hint blanco tenue
           prefixIcon: Icon(Icons.search),
           border: InputBorder.none,
           contentPadding: EdgeInsets.symmetric(vertical: 10),
