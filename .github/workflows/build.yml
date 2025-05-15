@@ -57,6 +57,9 @@ jobs:
       - name: Build WEB
         run: flutter build web
 
+      - name: Coverage file
+        run: flutter test --coverage
+      
       - name: Install SonarQube Build Wrapper
         uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v5
 
