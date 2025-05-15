@@ -30,10 +30,15 @@ class UserButton extends StatelessWidget {
             onSelected: (value) async {
               if (value == 'logout') {
                 await FirebaseAuth.instance.signOut();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Sesión cerrada exitosamente.')),
-                );
-                // No redirigir al LoginScreen, solo cerrar sesión
+
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Sesión cerrada exitosamente.'),
+                    ),
+                  );
+                  // No redirigir al LoginScreen, solo cerrar sesión
+                }
               }
             },
             itemBuilder:

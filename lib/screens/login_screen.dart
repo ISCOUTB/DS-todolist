@@ -20,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool isloading = false;
 
-  loginUser() async {
+  Future<void> loginUser() async {
     setState(() {
       isloading = true;
     });
@@ -30,6 +30,8 @@ class _LoginScreenState extends State<LoginScreen> {
         email: useremailController.text.trim(),
         password: passwordController.text.trim(),
       );
+
+      if (!mounted) return; // Chequeo inmediato tras el await
 
       Get.snackbar(
         "Éxito",
@@ -46,9 +48,11 @@ class _LoginScreenState extends State<LoginScreen> {
       Get.snackbar("Error", e.toString());
     }
 
-    setState(() {
-      isloading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isloading = false;
+      });
+    }
   }
 
   @override

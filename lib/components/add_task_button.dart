@@ -21,7 +21,7 @@ class AddTaskButton extends StatelessWidget {
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-              child: AddTaskForm(),
+              child: const AddTaskForm(),
             );
           },
         );

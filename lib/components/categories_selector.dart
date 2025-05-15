@@ -50,7 +50,7 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           "Categoria",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
@@ -58,7 +58,7 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
         DropdownButton<String>(
           value: _selectedCategory,
           isExpanded: true,
-          hint: Text("Seleccionar categoría"),
+          hint: const Text("Seleccionar categoría"),
           items: [
             ..._categories.map((category) {
               return DropdownMenuItem<String>(
@@ -123,23 +123,27 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
                     listen: false,
                   ).storage.agregarCategoria(newCategory);
 
-                  // Notifica a TaskNotifier que las categorías han cambiado
-                  Provider.of<TaskNotifier>(
-                    context,
-                    listen: false,
-                  ).loadCategories();
+                  if (context.mounted) {
+                    // Notifica a TaskNotifier que las categorías han cambiado
+                    Provider.of<TaskNotifier>(
+                      context,
+                      listen: false,
+                    ).loadCategories();
 
-                  _categories.add(newCategory); // Añadir la nueva categoría
-                  _categories =
-                      _categories.toSet().toList(); // Elimina duplicados
-                  setState(() {
-                    _selectedCategory = newCategory;
-                  });
-                  widget.onCategorySelected(
-                    newCategory,
-                  ); // Notifica al widget padre
+                    _categories.add(newCategory); // Añadir la nueva categoría
+                    _categories =
+                        _categories.toSet().toList(); // Elimina duplicados
+                    setState(() {
+                      _selectedCategory = newCategory;
+                    });
+                    widget.onCategorySelected(
+                      newCategory,
+                    ); // Notifica al widget padre
+                  }
+                  if (context.mounted) {
+                    Navigator.pop(context); // Cierra el diálogo
+                  }
                 }
-                Navigator.pop(context); // Cierra el diálogo
               },
               child: const Text("Añadir"),
             ),

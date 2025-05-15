@@ -19,7 +19,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final confirmpasswordController = TextEditingController();
   bool isloading = false;
 
-  registerUser() async {
+  Future<void> registerUser() async {
     setState(() {
       isloading = true;
     });
@@ -39,8 +39,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         password: passwordController.text.trim(),
       );
 
+      if (!mounted) return;
+
       await FirebaseAuth.instance.currentUser!.sendEmailVerification();
       await FirebaseAuth.instance.signOut();
+
+      if (!mounted) return;
+
       Get.snackbar(
         "Éxito",
         "Registro exitoso. Verifica tu email.",
@@ -52,14 +57,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
       // Usar AuthNavigator para manejar la navegación
       await AuthNavigator.handleAuthNavigation(context);
     } on FirebaseAuthException catch (e) {
-      Get.snackbar("Error", e.message!);
+      if (mounted) {
+        Get.snackbar("Error", e.message!);
+      }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      if (mounted) {
+        Get.snackbar("Error", e.toString());
+      }
     }
 
-    setState(() {
-      isloading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isloading = false;
+      });
+    }
   }
 
   @override

@@ -77,10 +77,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                   listen: false,
                                 ).storage;
                             await storage.agregarCategoria(value);
-                            if (!mounted) return; // <--- chequeo de seguridad
-
-                            _loadCategories(); // Recargar categorías después de agregar
-                            Navigator.of(context).pop();
+                            if (context.mounted) {
+                              _loadCategories(); // Recargar categorías después de agregar
+                              Navigator.of(context).pop();
+                            } // <--- chequeo de seguridad
                           },
                           decoration: const InputDecoration(
                             hintText: 'Nombre de la categoría',
@@ -157,11 +157,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   await context.read<TaskNotifier>().eliminarCategoria(
                     categoryName,
                   );
-
-                  if (!mounted) return; // <--- chequeo de seguridad
-
-                  _loadCategories(); // Recargar categorías después de eliminar
-                  Navigator.of(context).pop();
+                  if (context.mounted) {
+                    _loadCategories(); // Recargar categorías después de eliminar
+                    Navigator.of(context).pop();
+                  } // <--- chequeo de seguridad
                 },
                 child: const Text('Eliminar'),
               ),
