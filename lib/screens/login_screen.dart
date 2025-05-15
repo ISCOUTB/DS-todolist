@@ -20,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool isloading = false;
 
-  LoginUser() async {
+  Future<void> LoginUser() async {
     setState(() {
       isloading = true;
     });
@@ -31,6 +31,8 @@ class _LoginScreenState extends State<LoginScreen> {
         password: passwordController.text.trim(),
       );
 
+      if (!mounted) return; // Chequeo inmediato tras el await
+
       Get.snackbar(
         "Éxito",
         "Inicio de sesión exitoso",
@@ -39,18 +41,18 @@ class _LoginScreenState extends State<LoginScreen> {
         colorText: Colors.white,
       );
 
-      if (context.mounted) {
-        Navigator.pop(context); // Volver a la pantalla anterior
-      }
+      Navigator.pop(context); // Volver a la pantalla anterior
     } on FirebaseAuthException catch (e) {
       Get.snackbar("Error", e.message!);
     } catch (e) {
       Get.snackbar("Error", e.toString());
     }
 
-    setState(() {
-      isloading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isloading = false;
+      });
+    }
   }
 
   @override
