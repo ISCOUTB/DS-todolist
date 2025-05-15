@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: SearchTextfield(),
-        actions: [SorterButton(), UserButton()],
+        actions: const [SorterButton(), UserButton()],
       ),
       drawer: isMobile ? const Drawer(child: DrawerWidget()) : null,
       body: _views[_currentIndex],
