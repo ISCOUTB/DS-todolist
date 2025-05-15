@@ -48,7 +48,7 @@ class TaskNotifier extends ChangeNotifier {
 
     _syncTimer = Timer.periodic(const Duration(hours: 1), (timer) async {
       final connectivityResult = await connectivity.checkConnectivity();
-      final isConnected = connectivityResult != ConnectivityResult.none;
+      final bool isConnected = connectivityResult as bool;
 
       if (isConnected && firebaseAuth.currentUser != null) {
         // Si hay conexión y el usuario ha iniciado sesión en Firebase, sincroniza con la API

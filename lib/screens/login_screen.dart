@@ -39,7 +39,9 @@ class _LoginScreenState extends State<LoginScreen> {
         colorText: Colors.white,
       );
 
-      Navigator.pop(context); // Volver a la pantalla anterior
+      if (context.mounted) {
+        Navigator.pop(context); // Volver a la pantalla anterior
+      }
     } on FirebaseAuthException catch (e) {
       Get.snackbar("Error", e.message!);
     } catch (e) {

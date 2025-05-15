@@ -49,8 +49,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
         colorText: Colors.white,
       );
 
-      // Usar AuthNavigator para manejar la navegación
-      await AuthNavigator.handleAuthNavigation(context);
+      if (context.mounted) {
+        // Usar AuthNavigator para manejar la navegación
+        await AuthNavigator.handleAuthNavigation(context);
+      }
     } on FirebaseAuthException catch (e) {
       Get.snackbar("Error", e.message!);
     } catch (e) {
