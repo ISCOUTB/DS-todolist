@@ -101,7 +101,6 @@ class FirebaseAuthService {
       } else {
         errorSnackbar('Error sending password reset email: ${e.code}');
       }
-      ;
     } catch (e) {
       errorSnackbar('Error inesperado: $e');
     }

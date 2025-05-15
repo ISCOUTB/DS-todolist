@@ -5,8 +5,8 @@ import 'package:to_do_list/services/storage_switch.dart';
 import 'package:to_do_list/models/storage_strategy.dart';
 
 class MockStorage implements StorageStrategy {
-  List<Task> _tasks = [];
-  List<String> _categories = ['Personal', 'Trabajo'];
+  final List<Task> _tasks = [];
+  final List<String> _categories = ['Personal', 'Trabajo'];
   bool eliminarTareaCalled = false;
   bool eliminarCategoriaCalled = false;
   bool editarTareaCalled = false;

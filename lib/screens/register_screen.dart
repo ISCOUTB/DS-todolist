@@ -19,7 +19,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final confirmpasswordController = TextEditingController();
   bool isloading = false;
 
-  RegisterUser() async {
+  registerUser() async {
     setState(() {
       isloading = true;
     });
@@ -100,7 +100,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       obscureText: true,
                     ),
                     const SizedBox(height: 25),
-                    MyButton(onTap: RegisterUser, text: "Registrar"),
+                    MyButton(onTap: registerUser, text: "Registrar"),
                     const SizedBox(height: 25),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),

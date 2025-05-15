@@ -21,9 +21,9 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _views = [
     ResponsiveWidget(
-      mobileLayout: BuildMobileLayout(),
-      tabletLayout: BuildTabletLayout(),
-      desktopLayout: BuildDesktopLayout(),
+      mobileLayout: buildMobileLayout(),
+      tabletLayout: buildTabletLayout(),
+      desktopLayout: buildDesktopLayout(),
     ),
     Calendar(),
   ];
@@ -82,17 +82,17 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget BuildMobileLayout() =>
+Widget buildMobileLayout() =>
     Container(color: Colors.white, child: Center(child: TaskWidget()));
 
-Widget BuildTabletLayout() => Row(
+Widget buildTabletLayout() => Row(
   children: [
     Expanded(flex: 2, child: DrawerWidget()),
     Expanded(flex: 5, child: TaskWidget()),
   ],
 );
 
-Widget BuildDesktopLayout() => Row(
+Widget buildDesktopLayout() => Row(
   children: [
     Expanded(flex: 2, child: DrawerWidget()),
     Expanded(flex: 5, child: TaskWidget()),

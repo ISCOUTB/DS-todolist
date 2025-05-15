@@ -20,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool isloading = false;
 
-  LoginUser() async {
+  loginUser() async {
     setState(() {
       isloading = true;
     });
@@ -117,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     const SizedBox(height: 20),
 
-                    MyButton(onTap: LoginUser, text: "Iniciar Sesión"),
+                    MyButton(onTap: loginUser, text: "Iniciar Sesión"),
 
                     const SizedBox(height: 25),
 

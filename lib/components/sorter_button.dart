@@ -4,19 +4,21 @@ import 'package:to_do_list/services/task_notifier.dart';
 import 'package:to_do_list/services/task_sorter.dart';
 
 class SorterButton extends StatefulWidget {
-  const SorterButton({Key? key}) : super(key: key);
+  const SorterButton({super.key});
 
   @override
-  _SorterButtonState createState() => _SorterButtonState();
+  SorterButtonState createState() => SorterButtonState();
 }
 
-class _SorterButtonState extends State<SorterButton> {
-  String _selectedOption = 'Ordenar por fecha';
+const String _sortByDate = 'Ordenar por fecha';
+const String _sortByTitle = 'Ordenar por título';
 
+class SorterButtonState extends State<SorterButton> {
   void _sortTasks(String option) async {
     final taskNotifier = Provider.of<TaskNotifier>(context, listen: false);
 
-    if (option == 'Ordenar por título') {
+    if (option == _sortByTitle) {
+      // Ordena por título
       final sortedTasksByTitle = await TaskSorter.sortTasksByTitle(
         taskNotifier.tasks,
       );
@@ -28,10 +30,6 @@ class _SorterButtonState extends State<SorterButton> {
       await taskNotifier.loadFilteredTasks(sortedTasksByDueDate);
       // Ordena por fecha (por defecto)
     }
-
-    setState(() {
-      _selectedOption = option;
-    });
   }
 
   @override
@@ -43,14 +41,8 @@ class _SorterButtonState extends State<SorterButton> {
       },
       itemBuilder:
           (context) => [
-            const PopupMenuItem(
-              value: 'Ordenar por fecha',
-              child: Text('Ordenar por fecha'),
-            ),
-            const PopupMenuItem(
-              value: 'Ordenar por título',
-              child: Text('Ordenar por título'),
-            ),
+            const PopupMenuItem(value: _sortByDate, child: Text(_sortByDate)),
+            const PopupMenuItem(value: _sortByTitle, child: Text(_sortByTitle)),
           ],
     );
   }
