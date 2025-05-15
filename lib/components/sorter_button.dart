@@ -11,8 +11,6 @@ class SorterButton extends StatefulWidget {
 }
 
 class _SorterButtonState extends State<SorterButton> {
-  String _selectedOption = 'Ordenar por fecha';
-
   void _sortTasks(String option) async {
     final taskNotifier = Provider.of<TaskNotifier>(context, listen: false);
 
@@ -28,10 +26,6 @@ class _SorterButtonState extends State<SorterButton> {
       await taskNotifier.loadFilteredTasks(sortedTasksByDueDate);
       // Ordena por fecha (por defecto)
     }
-
-    setState(() {
-      _selectedOption = option;
-    });
   }
 
   @override

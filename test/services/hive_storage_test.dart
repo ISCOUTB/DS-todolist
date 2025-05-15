@@ -3,7 +3,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:to_do_list/models/task.dart';
 import 'package:to_do_list/services/hive_storage.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
-import 'package:path_provider_platform_interface/src/method_channel_path_provider.dart';
 
 class MockPathProvider extends PathProviderPlatform {
   @override
