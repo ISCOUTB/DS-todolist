@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: SearchTextfield(),
-        actions: const [SorterButton(), UserButton()],
+        actions: [SorterButton(), UserButton()],
       ),
       drawer: isMobile ? const Drawer(child: DrawerWidget()) : null,
       body: _views[_currentIndex],
@@ -85,14 +85,14 @@ class _HomePageState extends State<HomePage> {
 Widget buildMobileLayout() =>
     Container(color: Colors.white, child: Center(child: TaskWidget()));
 
-Widget buildTabletLayout() => Row(
+Widget buildTabletLayout() => const Row(
   children: [
     Expanded(flex: 2, child: DrawerWidget()),
     Expanded(flex: 5, child: TaskWidget()),
   ],
 );
 
-Widget buildDesktopLayout() => Row(
+Widget buildDesktopLayout() => const Row(
   children: [
     Expanded(flex: 2, child: DrawerWidget()),
     Expanded(flex: 5, child: TaskWidget()),

@@ -5,6 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:to_do_list/models/task.dart';
 import 'package:to_do_list/services/api_storage.dart';
+import 'package:to_do_list/services/notification_service.dart';
 import 'package:to_do_list/services/storage_switch.dart';
 import 'package:to_do_list/services/task_sorter.dart';
 import 'package:to_do_list/services/hive_storage.dart';
@@ -16,23 +17,24 @@ class TaskNotifier extends ChangeNotifier {
   late StorageSwitch storage;
   Timer? _syncTimer;
 
-  TaskNotifier() {
-    _initializeStorage();
+  TaskNotifier({bool autoSync = true}) {
+    _initializeStorage(autoSync: autoSync);
   }
 
   List<Task> get tasks => _tasks;
   List<String> get categories => _categories;
 
-  Future<void> _initializeStorage() async {
+  Future<void> _initializeStorage({bool autoSync = true}) async {
     if (kIsWeb) {
       // Si está en la web, usa la API
       storage = StorageSwitch(ApiStorage());
     } else if (Platform.isAndroid) {
       // Si está en Android, usa Hive
       storage = StorageSwitch(HiveStorage());
-
-      // Configura la sincronización con la API cada hora si hay conexión
-      _startSyncWithApi();
+      if (autoSync) {
+        // Configura la sincronización con la API cada hora si hay conexión
+        _startSyncWithApi();
+      }
     } else {
       // Por defecto, usa Hive
       storage = StorageSwitch(HiveStorage());
@@ -64,12 +66,19 @@ class TaskNotifier extends ChangeNotifier {
   Future<void> loadTasks() async {
     _tasks = await storage.leerTareas();
     _tasks = await TaskSorter.sortTasksByDueDate(_tasks);
+
+    if (Platform.isAndroid) {
+      debugPrint('Notificando tareas...');
+      NotificationService().showNotification(_tasks);
+    }
+
     notifyListeners(); // Notifica a los widgets que los datos han cambiado
   }
 
   Future<void> addTask(Task task) async {
     await storage.guardarTarea(task);
     await loadTasks(); // Recarga las tareas después de añadir una nueva
+    notifyListeners();
   }
 
   Future<void> eliminarTarea(String tareaId) async {
