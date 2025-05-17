@@ -8,21 +8,25 @@ class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
 
   @override
-  _ForgetPasswordScreenState createState() => _ForgetPasswordScreenState();
+  ForgetPasswordScreenState createState() => ForgetPasswordScreenState();
 }
 
-class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
+class ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   final useremailController = TextEditingController();
   bool isloading = false;
 
-  Forgotpassword() async {
+  forgotPassword() async {
     setState(() {
       isloading = true;
     });
 
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: useremailController.text);
-      Get.snackbar("Email enviado", "Revisa tu bandeja de entrada",
+      await FirebaseAuth.instance.sendPasswordResetEmail(
+        email: useremailController.text,
+      );
+      Get.snackbar(
+        "Email enviado",
+        "Revisa tu bandeja de entrada",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green,
         colorText: Colors.white,
@@ -43,10 +47,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
-      appBar: AppBar(
-        backgroundColor: Colors.grey[300],
-        elevation: 0, 
-      ),
+      appBar: AppBar(backgroundColor: Colors.grey[300], elevation: 0),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
@@ -55,24 +56,23 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 const SizedBox(height: 50),
                 const Icon(Icons.password, size: 100),
                 const SizedBox(height: 50),
-          
+
                 Text(
                   "Reinicio de contraseña",
                   style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                 ),
-          
+
                 const SizedBox(height: 25),
-          
+
                 MyTextField(
                   controller: useremailController,
                   hintText: "Email",
                   obscureText: false,
                 ),
-          
+
                 const SizedBox(height: 25),
-          
-                MyButton(onTap: Forgotpassword, text: "Enviar Email",),
-              
+
+                MyButton(onTap: forgotPassword, text: "Enviar Email"),
               ],
             ),
           ),

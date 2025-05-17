@@ -1,26 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:to_do_list/models/task.dart';
+import 'package:to_do_list/services/task_notifier.dart';
 
 class SearchTextfield extends StatelessWidget {
   const SearchTextfield({super.key});
+
+  List<Task> filtrarTareas(List<Task> tareas, String query) {
+    final lowerQuery = query.toLowerCase();
+    return tareas.where((task) {
+      return task.title.toLowerCase().contains(lowerQuery) ||
+          task.description.toLowerCase().contains(lowerQuery);
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 40,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextField(
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           hintText: "Buscar tareas...",
           prefixIcon: Icon(Icons.search),
           border: InputBorder.none,
           contentPadding: EdgeInsets.symmetric(vertical: 10),
         ),
         onChanged: (value) {
-          // Lógica para manejar el texto ingresado
-          print("Texto ingresado: $value");
+          final todasLasTareas = context.read<TaskNotifier>().tasks;
+          final filtradas = filtrarTareas(todasLasTareas, value);
+
+          if (value.isEmpty) {
+            // Si el campo de búsqueda está vacío, muestra todas las tareas
+            context.read<TaskNotifier>().loadTasks();
+          } else {
+            // Filtra las tareas según el valor ingresado
+            context.read<TaskNotifier>().loadFilteredTasks(filtradas);
+          }
         },
       ),
     );
