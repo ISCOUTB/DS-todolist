@@ -1,13 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationService {
-  final FlutterLocalNotificationsPlugin notificationPlugin;
+  final notificationPlugin = FlutterLocalNotificationsPlugin();
   final bool _isInitialized = false;
-
-  NotificationService({FlutterLocalNotificationsPlugin? plugin})
-    : notificationPlugin = plugin ?? FlutterLocalNotificationsPlugin();
 
   bool get isInitialized => _isInitialized;
 
@@ -37,41 +32,7 @@ class NotificationService {
     return const NotificationDetails(android: androidPlatformChannelSpecifics);
   }
 
-  Future<void> showNotification(tasks) async {
-    if (tasks.isEmpty) return;
-
-    final prefs = await SharedPreferences.getInstance();
-    final today = DateTime.now();
-    final todayStr = '${today.year}-${today.month}-${today.day}';
-
-    for (var task in tasks) {
-      if (task.dueDate == null) continue;
-      if (task.completed) continue;
-
-      final dueDate = task.dueDate!;
-      final difference =
-          dueDate
-              .difference(DateTime(today.year, today.month, today.day))
-              .inDays;
-
-      // Notifica si la tarea vence mañana o antes (pero aún no ha pasado)
-      if (difference <= 1 && difference >= 0) {
-        final notifiedKey = 'notified_${task.id}_$todayStr';
-        final alreadyNotified = prefs.getBool(notifiedKey) ?? false;
-
-        if (!alreadyNotified) {
-          debugPrint('Notificando tarea: ${task.title}');
-          int id = int.tryParse(task.id) ?? task.hashCode;
-          await notificationPlugin.show(
-            id,
-            'Tarea Por Vencer',
-            'La tarea "${task.title}" vence el ${dueDate.day}/${dueDate.month}/${dueDate.year}',
-            notificationDetails(),
-            payload: null,
-          );
-          await prefs.setBool(notifiedKey, true);
-        }
-      }
-    }
+  Future<void> showNotification(int id, String title, String body) async {
+    await notificationPlugin.show(id, title, body, notificationDetails());
   }
 }
