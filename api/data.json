@@ -1,0 +1,33 @@
+{
+    "tasks": [
+        {
+            "id": "acb34e7f-e415-47e1-8b6f-5e51148d80a8",
+            "title": "esta funcionando",
+            "description": "is working? yes baby ",
+            "dueDate": "2025-04-30T00:00:00.000",
+            "completed": false,
+            "createdAt": "2025-04-26T17:42:08.905367",
+            "category": "General"
+        },
+        {
+            "id": "528fa901-16d1-4869-8915-1bd472b85741",
+            "title": "si anda baby",
+            "description": "to do lust",
+            "dueDate": "2025-04-29T00:00:00.000",
+            "completed": false,
+            "createdAt": "2025-04-26T17:43:21.601695",
+            "category": "Trabajo"
+        }
+    ],
+    "categories": [
+        {
+            "name": "Personal"
+        },
+        {
+            "name": "Trabajo"
+        },
+        {
+            "name": "ahorrar"
+        }
+    ]
+}

@@ -20,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool isloading = false;
 
-  LoginUser() async {
+  Future<void> loginUser() async {
     setState(() {
       isloading = true;
     });
@@ -30,15 +30,29 @@ class _LoginScreenState extends State<LoginScreen> {
         email: useremailController.text.trim(),
         password: passwordController.text.trim(),
       );
+
+      if (!mounted) return; // Chequeo inmediato tras el await
+
+      Get.snackbar(
+        "Éxito",
+        "Inicio de sesión exitoso",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+
+      Navigator.pop(context); // Volver a la pantalla anterior
     } on FirebaseAuthException catch (e) {
       Get.snackbar("Error", e.message!);
     } catch (e) {
       Get.snackbar("Error", e.toString());
     }
 
-    setState(() {
-      isloading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isloading = false;
+      });
+    }
   }
 
   @override
@@ -47,6 +61,16 @@ class _LoginScreenState extends State<LoginScreen> {
         ? Center(child: CircularProgressIndicator())
         : Scaffold(
           backgroundColor: Colors.grey[300],
+          appBar: AppBar(
+            backgroundColor: Colors.grey[300],
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () {
+                Navigator.pop(context); // Volver a la pantalla anterior
+              },
+            ),
+          ),
           body: SafeArea(
             child: SingleChildScrollView(
               child: Center(
@@ -85,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           GestureDetector(
-                            onTap: (() => Get.to(ForgetPasswordScreen())),
+                            onTap: (() => Get.to(() => ForgetPasswordScreen())),
                             child: Text(
                               "Olvidaste tu contraseña?",
                               style: TextStyle(color: Colors.grey[600]),
@@ -97,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     const SizedBox(height: 20),
 
-                    MyButton(onTap: LoginUser, text: "Iniciar Sesión"),
+                    MyButton(onTap: loginUser, text: "Iniciar Sesión"),
 
                     const SizedBox(height: 25),
 
@@ -153,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(width: 4),
                         GestureDetector(
-                          onTap: (() => Get.to(RegisterScreen())),
+                          onTap: (() => Get.to(() => RegisterScreen())),
                           child: const Text(
                             "Registrate",
                             style: TextStyle(
