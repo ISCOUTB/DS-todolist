@@ -49,4 +49,18 @@ void main() {
       expect(task.category, 'Personal');
     });
   });
+
+  test('Verifica getter de fecha', () {
+    final task = Task(
+      id: '1',
+      title: 'Comprar comida',
+      description: 'Ir al supermercado',
+      dueDate: DateTime.parse('2023-05-10'),
+      completed: false,
+      createdAt: DateTime.parse('2023-05-09'),
+      category: 'Personal',
+    );
+
+    expect(task.date, null);
+  });
 }

@@ -19,10 +19,12 @@ void main() {
       final task = buildTask();
       await tester.pumpWidget(
         MaterialApp(
-          home: ListItemWidget(
-            task: task,
-            onDelete: () {},
-            onToggleCompleted: (_) {},
+          home: Scaffold(
+            body: ListItemWidget(
+              task: task,
+              onDelete: () {},
+              onToggleCompleted: (_) {},
+            ),
           ),
         ),
       );
@@ -38,16 +40,19 @@ void main() {
       final task = buildTask();
       await tester.pumpWidget(
         MaterialApp(
-          home: ListItemWidget(
-            task: task,
-            onDelete: () {
-              deleted = true;
-            },
-            onToggleCompleted: (_) {},
+          home: Scaffold(
+            body: ListItemWidget(
+              task: task,
+              onDelete: () {
+                deleted = true;
+              },
+              onToggleCompleted: (_) {},
+            ),
           ),
         ),
       );
       await tester.tap(find.byIcon(Icons.delete));
+      await tester.pumpAndSettle();
       expect(deleted, true);
     });
 
@@ -58,16 +63,19 @@ void main() {
       final task = buildTask();
       await tester.pumpWidget(
         MaterialApp(
-          home: ListItemWidget(
-            task: task,
-            onDelete: () {},
-            onToggleCompleted: (val) {
-              completedValue = val;
-            },
+          home: Scaffold(
+            body: ListItemWidget(
+              task: task,
+              onDelete: () {},
+              onToggleCompleted: (val) {
+                completedValue = val;
+              },
+            ),
           ),
         ),
       );
       await tester.tap(find.byType(Checkbox));
+      await tester.pumpAndSettle();
       expect(completedValue, isNotNull);
     });
   });

@@ -191,7 +191,6 @@ class _EditTaskButtonState extends State<EditTaskButton> {
 
       try {
         context.read<TaskNotifier>().editarTarea(newTask);
-        debugPrint('Edit successfully');
         Navigator.pop(context); // Cierra el modal
 
         _titleController.clear(); // Limpia el campo de título

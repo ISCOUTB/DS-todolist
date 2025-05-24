@@ -62,7 +62,6 @@ class AddTaskFormState extends State<AddTaskForm> {
 
       try {
         context.read<TaskNotifier>().addTask(newTask);
-        debugPrint('Task added successfully');
         Navigator.pop(context);
 
         _titleController.clear();

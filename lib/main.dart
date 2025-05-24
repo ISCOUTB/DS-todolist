@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
