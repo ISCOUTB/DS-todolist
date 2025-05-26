@@ -20,14 +20,16 @@ class PersistentIdentifier {
     final user = (auth ?? FirebaseAuth.instance).currentUser;
 
     if (user != null) {
-      if (deviceId![0] == 'F' && deviceId.startsWith('Fire-')) {
+      if (deviceId != null && deviceId.startsWith('Fire-')) {
         // Si el ID ya es de Firebase, no lo cambiamos
         return deviceId;
       }
 
-      final bool = await migrarDatos(user);
-      if (bool) {
-        return deviceId;
+      final migrado = await migrarDatos(user);
+      if (migrado) {
+        // Leer el nuevo ID guardado tras la migración
+        deviceId = prefs.getString(_keyDeviceId);
+        return deviceId!;
       } else {
         // Si no se pudo migrar, genera un nuevo UUID
         deviceId = const Uuid().v4();
