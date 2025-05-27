@@ -37,7 +37,7 @@ class _ListItemWidgetState extends State<ListItemWidget> {
               100,
               100,
               100,
-            ).withOpacity(0.2), // Sombra más suave
+            ).withAlpha((0.2 * 255).toInt()), // Sombra más suave
             blurRadius: 8, // Difuminado
             offset: Offset(2, 4), // Desplazamiento horizontal y vertical
           ),
