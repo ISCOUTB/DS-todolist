@@ -46,8 +46,9 @@ class TaskNotifier extends ChangeNotifier {
     final connectivity = Connectivity();
     final firebaseAuth = FirebaseAuth.instance;
 
-    _syncTimer = Timer.periodic(const Duration(hours: 1), (timer) async {
+    _syncTimer = Timer.periodic(const Duration(minutes: 1), (timer) async {
       final connectivityResult = await connectivity.checkConnectivity();
+      // ignore: unrelated_type_equality_checks
       final bool isConnected = connectivityResult != ConnectivityResult.none;
 
       if (isConnected && firebaseAuth.currentUser != null) {
