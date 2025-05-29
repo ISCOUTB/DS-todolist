@@ -49,7 +49,7 @@ class AddTaskFormState extends State<AddTaskForm> {
 
   void addTask() {
     if (_formKey.currentState!.validate()) {
-      final String uniqueId = Uuid().v4();
+      final String uniqueId = const Uuid().v4();
       final newTask = Task(
         id: uniqueId,
         title: _titleController.text,

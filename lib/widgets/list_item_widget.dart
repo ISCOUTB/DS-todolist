@@ -28,7 +28,7 @@ class _ListItemWidgetState extends State<ListItemWidget> {
       // Contenedor para el ListTile de las tareas
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: Color.fromARGB(69, 170, 170, 170),
+        color: const Color.fromARGB(69, 170, 170, 170),
         borderRadius: BorderRadius.circular(6),
         boxShadow: [
           BoxShadow(
@@ -39,7 +39,7 @@ class _ListItemWidgetState extends State<ListItemWidget> {
               100,
             ).withAlpha((0.2 * 255).toInt()), // Sombra más suave
             blurRadius: 8, // Difuminado
-            offset: Offset(2, 4), // Desplazamiento horizontal y vertical
+            offset: const Offset(2, 4), // Desplazamiento horizontal y vertical
           ),
         ],
       ),
