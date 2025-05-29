@@ -20,8 +20,8 @@ class AppTheme {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: Colors.white, // Color de fondo del campo de texto
-      hintStyle: TextStyle(
-        color: const Color.fromARGB(255, 0, 0, 0),
+      hintStyle: const TextStyle(
+        color: Color.fromARGB(255, 0, 0, 0),
       ), // Color del texto de sugerencia
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
