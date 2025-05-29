@@ -8,8 +8,8 @@ import 'package:to_do_list/models/task.dart';
 import 'package:to_do_list/screens/home_page.dart';
 import 'package:to_do_list/services/notification_service.dart';
 import 'package:to_do_list/services/task_notifier.dart';
+import 'package:to_do_list/theme/app_theme.dart'; // importa tu tema personalizado
 import 'package:hive_flutter/hive_flutter.dart';
-
 import 'package:get/get.dart';
 
 void main() async {
@@ -41,6 +41,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(debugShowCheckedModeBanner: false, home: HomePage());
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.darkTheme,
+      home: const HomePage(),
+    );
   }
 }

@@ -6,7 +6,7 @@ import 'package:to_do_list/models/storage_strategy.dart';
 import 'package:to_do_list/models/persistent_identifier.dart';
 
 class ApiStorage implements StorageStrategy {
-  final String baseUrl = 'http://172.191.195.204:5000';
+  final String baseUrl = 'http://miapiservice.sytes.net:5000';
 
   Future<String> _getUuid() async {
     return await PersistentIdentifier.getDeviceId();

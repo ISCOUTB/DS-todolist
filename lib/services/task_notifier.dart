@@ -46,9 +46,10 @@ class TaskNotifier extends ChangeNotifier {
     final connectivity = Connectivity();
     final firebaseAuth = FirebaseAuth.instance;
 
-    _syncTimer = Timer.periodic(const Duration(hours: 1), (timer) async {
+    _syncTimer = Timer.periodic(const Duration(minutes: 1), (timer) async {
       final connectivityResult = await connectivity.checkConnectivity();
-      final bool isConnected = connectivityResult as bool;
+      // ignore: unrelated_type_equality_checks
+      final bool isConnected = connectivityResult != ConnectivityResult.none;
 
       if (isConnected && firebaseAuth.currentUser != null) {
         // Si hay conexión y el usuario ha iniciado sesión en Firebase, sincroniza con la API
@@ -70,6 +71,7 @@ class TaskNotifier extends ChangeNotifier {
   Future<void> addTask(Task task) async {
     await storage.guardarTarea(task);
     await loadTasks(); // Recarga las tareas después de añadir una nueva
+    notifyListeners();
   }
 
   Future<void> eliminarTarea(String tareaId) async {

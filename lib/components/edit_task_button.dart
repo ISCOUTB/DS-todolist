@@ -52,6 +52,13 @@ class _EditTaskButtonState extends State<EditTaskButton> {
                   child: SingleChildScrollView(
                     child: Container(
                       padding: EdgeInsets.all(20),
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(102, 170, 170, 170),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+                      ),
                       child: Form(
                         key: _formKey,
                         child: Column(
@@ -64,11 +71,18 @@ class _EditTaskButtonState extends State<EditTaskButton> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             TextFormField(
+                              style: const TextStyle(
+                                color: Color.fromARGB(255, 0, 0, 0),
+                              ),
                               controller: _titleController,
-                              decoration: InputDecoration(
-                                labelText: 'Título',
+                              decoration: const InputDecoration(
+                                hintText: 'Título',
+                                hintStyle: TextStyle(
+                                  //colorColor.fromARGB(255, 64, 64, 64)anco
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                ),
                                 border: OutlineInputBorder(),
                               ),
                               validator: (value) {
@@ -80,14 +94,20 @@ class _EditTaskButtonState extends State<EditTaskButton> {
                             ),
                             SizedBox(height: 15),
                             TextFormField(
+                              style: const TextStyle(
+                                color: Color.fromARGB(255, 0, 0, 0),
+                              ),
                               controller: _descriptionController,
-                              decoration: InputDecoration(
-                                labelText: 'Descripción',
+                              decoration: const InputDecoration(
+                                hintText: 'Descripción',
+                                hintStyle: TextStyle(
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                ),
                                 border: OutlineInputBorder(),
                               ),
                               maxLines: 2,
                             ),
-                            SizedBox(height: 15),
+                            const SizedBox(height: 15),
                             ListTile(
                               title: Text(
                                 _dueDate == null
@@ -127,7 +147,7 @@ class _EditTaskButtonState extends State<EditTaskButton> {
                                   horizontal: 25,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.blue,
+                                  color: Colors.grey,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Center(
@@ -171,7 +191,6 @@ class _EditTaskButtonState extends State<EditTaskButton> {
 
       try {
         context.read<TaskNotifier>().editarTarea(newTask);
-        debugPrint('Edit successfully');
         Navigator.pop(context); // Cierra el modal
 
         _titleController.clear(); // Limpia el campo de título

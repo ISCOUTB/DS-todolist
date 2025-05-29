@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -60,7 +59,6 @@ class NotificationService {
         final alreadyNotified = prefs.getBool(notifiedKey) ?? false;
 
         if (!alreadyNotified) {
-          debugPrint('Notificando tarea: ${task.title}');
           int id = int.tryParse(task.id) ?? task.hashCode;
           await notificationPlugin.show(
             id,
