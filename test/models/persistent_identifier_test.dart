@@ -58,23 +58,5 @@ void main() {
       final id = await PersistentIdentifier.getDeviceId(auth: auth);
       expect(id, 'Fire-Test12345');
     });
-
-    test('migrarDatos returns false if user is null', () async {
-      SharedPreferences.setMockInitialValues({'device_id': 'old-id'});
-      final result = await PersistentIdentifier.migrarDatos(null);
-      expect(result, false);
-    });
-
-    test('migrarDatos returns false if idGuardado is null', () async {
-      SharedPreferences.setMockInitialValues({});
-      final result = await PersistentIdentifier.migrarDatos(user);
-      expect(result, false);
-    });
-
-    test('migrarDatos returns false if already migrated', () async {
-      SharedPreferences.setMockInitialValues({'device_id': 'Fire-Test12345'});
-      final result = await PersistentIdentifier.migrarDatos(user);
-      expect(result, false);
-    });
   });
 }

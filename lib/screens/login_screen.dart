@@ -6,6 +6,7 @@ import 'package:to_do_list/components/my_button.dart';
 import 'package:to_do_list/components/my_text_field.dart';
 import 'package:to_do_list/screens/forget_password_screen.dart';
 import 'package:to_do_list/screens/register_screen.dart';
+import 'package:to_do_list/services/synchronization_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -30,6 +31,8 @@ class _LoginScreenState extends State<LoginScreen> {
         email: useremailController.text.trim(),
         password: passwordController.text.trim(),
       );
+
+      await SynchronizationService().initialize();
 
       if (!mounted) return; // Chequeo inmediato tras el await
 

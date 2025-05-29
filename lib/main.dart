@@ -7,6 +7,7 @@ import 'package:to_do_list/firebase_options.dart';
 import 'package:to_do_list/models/task.dart';
 import 'package:to_do_list/screens/home_page.dart';
 import 'package:to_do_list/services/notification_service.dart';
+import 'package:to_do_list/services/synchronization_service.dart';
 import 'package:to_do_list/services/task_notifier.dart';
 import 'package:to_do_list/theme/app_theme.dart'; // importa tu tema personalizado
 import 'package:hive_flutter/hive_flutter.dart';
@@ -23,8 +24,8 @@ void main() async {
     persistenceEnabled: true,
   );
 
-  NotificationService().initNotification();
-
+  await NotificationService().initNotification();
+  // Removed SynchronizationService().initialize from here because context is not available
   runApp(
     MultiProvider(
       providers: [
@@ -35,10 +36,26 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    // Initialize synchronization service here, where context is available
+    Future.microtask(() {
+      if (!mounted) return; // Chequeo inmediato tras el await
+
+      final notifier = Provider.of<TaskNotifier>(context, listen: false);
+      SynchronizationService().initialize(notifier: notifier);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
