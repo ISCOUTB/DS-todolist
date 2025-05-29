@@ -40,30 +40,36 @@ class HiveStorage implements StorageStrategy {
   }
 
   @override
-  Future<bool> eliminarTarea(String tareaId) async {
+  Future<bool> eliminarTarea(String id) async {
     try {
-      final box = await _getBox<Task>(boxName);
-      await box.delete(tareaId);
-      debugPrint('Tarea eliminada exitosamente de Hive.');
-      return true;
+      final box = Hive.box<Task>('tasks');
+      if (box.containsKey(id)) {
+        await box.delete(id);
+        debugPrint('Tarea eliminada exitosamente de Hive.');
+        return true;
+      }
+      debugPrint('No se encontró la tarea para eliminar.');
+      return false;
     } catch (e) {
-      debugPrint('Error al eliminar datos desde Hive: $e');
+      debugPrint('Error al eliminar la tarea: $e');
       return false;
     }
   }
 
   @override
-  Future<bool> agregarCategoria(String categoriaNombre) async {
+  Future<bool> agregarCategoria(String categoria) async {
     try {
-      final box = await _getBox<String>(categoryBoxName);
-      if (!box.values.contains(categoriaNombre)) {
-        await box.add(categoriaNombre);
-        debugPrint('Categoría agregada exitosamente en Hive: $categoriaNombre');
-        return true;
-      } else {
-        debugPrint('La categoría ya existe en Hive: $categoriaNombre');
+      if (!Hive.isBoxOpen('categories')) {
+        debugPrint('Error: Box "categories" is not open.');
         return false;
       }
+      final box = Hive.box<String>('categories');
+      if (box.values.contains(categoria)) {
+        return false;
+      }
+      await box.add(categoria);
+      debugPrint('Categoría agregada exitosamente en Hive: $categoria');
+      return true;
     } catch (e) {
       debugPrint('Error al agregar categoría en Hive: $e');
       return false;

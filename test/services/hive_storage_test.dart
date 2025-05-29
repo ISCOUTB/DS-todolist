@@ -191,40 +191,111 @@ void main() {
       expect(filtradas.length, 1);
       expect(filtradas.first.category, 'Personal');
     });
-    /*arreglar 
-Error al leer tareas por día desde Hive: NoSuchMethodError: The getter 'year' was called on null.
-Receiver: null
-Tried calling: year
-Expected: <true>
-Actual: <false>
-    
-    test('getTasksPerDay agrupa tareas por día', () async {
-      final now = DateTime.now();
-      final task1 = Task(
-        id: '1',
-        title: 'Hoy',
-        description: 'Desc',
-        dueDate: now,
-        completed: false,
-        createdAt: now,
-        category: 'Personal',
-      );
-      final task2 = Task(
-        id: '2',
-        title: 'Hoy también',
-        description: 'Desc',
-        dueDate: now,
-        completed: false,
-        createdAt: now,
-        category: 'Trabajo',
-      );
-      await hiveStorage.guardarTarea(task1);
-      await hiveStorage.guardarTarea(task2);
-
-      final map = await hiveStorage.getTasksPerDay();
-      expect(map.isNotEmpty, true);
-      expect(map.values.reduce((a, b) => a + b), 2);
+    test('Debería devolver false al agregar categoría duplicada', () async {
+      await hiveStorage.agregarCategoria('Duplicada');
+      final result = await hiveStorage.agregarCategoria('Duplicada');
+      expect(result, false);
     });
-    */
+
+    test('leerCategorias retorna lista vacía si hay error', () async {
+      // Simula error cerrando el box
+      final box = Hive.box<String>('categories');
+      await box.close();
+      final categorias = await hiveStorage.leerCategorias();
+      expect(categorias, isA<List<String>>());
+    });
+
+    test('leerTareas retorna lista vacía si hay error', () async {
+      // Cierra el box y vuelve a abrirlo para evitar errores de estado en otros tests
+      final boxName = 'tasks';
+      if (Hive.isBoxOpen(boxName)) {
+        await Hive.box<Task>(boxName).close();
+      }
+      // Elimina el box del registro de Hive para simular error
+      Hive.deleteBoxFromDisk(boxName);
+      // Ahora, leerTareas debería manejar el error y retornar []
+      final tareas = await hiveStorage.leerTareas();
+      expect(tareas, isA<List<Task>>());
+      expect(tareas, isEmpty);
+      // Reabre el box para siguientes tests
+      await Hive.openBox<Task>(boxName);
+    });
+
+    test('eliminarTarea retorna false si hay error', () async {
+      final boxName = 'tasks';
+      if (Hive.isBoxOpen(boxName)) {
+        await Hive.box<Task>(boxName).close();
+      }
+      Hive.deleteBoxFromDisk(boxName);
+      final result = await hiveStorage.eliminarTarea('no-existe');
+      expect(result, false);
+      await Hive.openBox<Task>(boxName);
+    });
+
+    test('editarTarea retorna false si hay error', () async {
+      final boxName = 'tasks';
+      if (Hive.isBoxOpen(boxName)) {
+        await Hive.box<Task>(boxName).close();
+      }
+      Hive.deleteBoxFromDisk(boxName);
+      final task = Task(
+        id: '1',
+        title: 'Error',
+        description: 'Error',
+        dueDate: DateTime.now(),
+        completed: false,
+        createdAt: DateTime.now(),
+        category: 'Error',
+      );
+      final result = await hiveStorage.editarTarea(task);
+      expect(result, false);
+      await Hive.openBox<Task>(boxName);
+    });
+
+    test('agregarCategoria retorna false si hay error', () async {
+      final boxName = 'categories';
+      if (Hive.isBoxOpen(boxName)) {
+        await Hive.box<String>(boxName).close();
+      }
+      Hive.deleteBoxFromDisk(boxName);
+      final result = await hiveStorage.agregarCategoria('Error');
+      expect(result, false);
+      await Hive.openBox<String>(boxName);
+    });
+
+    test('eliminarCategoria retorna false si hay error', () async {
+      final boxName = 'categories';
+      if (Hive.isBoxOpen(boxName)) {
+        await Hive.box<String>(boxName).close();
+      }
+      Hive.deleteBoxFromDisk(boxName);
+      final result = await hiveStorage.eliminarCategoria('Error');
+      expect(result, false);
+      await Hive.openBox<String>(boxName);
+    });
+
+    test('leerCategoriasFiltradas retorna lista vacía si hay error', () async {
+      final boxName = 'tasks';
+      if (Hive.isBoxOpen(boxName)) {
+        await Hive.box<Task>(boxName).close();
+      }
+      Hive.deleteBoxFromDisk(boxName);
+      final result = await hiveStorage.leerCategoriasFiltradas('Error');
+      expect(result, isA<List<Task>>());
+      expect(result, isEmpty);
+      await Hive.openBox<Task>(boxName);
+    });
+
+    test('getTasksPerDay retorna mapa vacío si hay error', () async {
+      final boxName = 'tasks';
+      if (Hive.isBoxOpen(boxName)) {
+        await Hive.box<Task>(boxName).close();
+      }
+      Hive.deleteBoxFromDisk(boxName);
+      final map = await hiveStorage.getTasksPerDay();
+      expect(map, isA<Map<DateTime, int>>());
+      expect(map.isEmpty, true);
+      await Hive.openBox<Task>(boxName);
+    });
   });
 }

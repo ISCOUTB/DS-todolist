@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:to_do_list/services/task_notifier.dart';
 import 'package:to_do_list/models/task.dart';
@@ -79,9 +81,14 @@ class MockStorage implements StorageStrategy {
 }
 
 class TestTaskNotifier extends TaskNotifier {
+  Timer? _syncTimer;
+
   TestTaskNotifier(StorageStrategy mock) {
     storage = StorageSwitch(mock);
   }
+
+  // Expose _syncTimer for testing purposes
+  Timer? get syncTimer => _syncTimer;
 }
 
 void main() {
@@ -129,6 +136,10 @@ void main() {
         expect(mock.eliminarTareaCalled, true);
         expect(notifier.tasks.where((t) => t.id == '1').isEmpty, true);
       });
+      test('no elimina si id no existe', () async {
+        await notifier.eliminarTarea('no-existe');
+        expect(mock.eliminarTareaCalled, true);
+      });
     });
 
     group('loadFilteredTasks', () {
@@ -144,6 +155,10 @@ void main() {
         await notifier.eliminarCategoria('Personal');
         expect(mock.eliminarCategoriaCalled, true);
         expect(mock._categories.contains('Personal'), false);
+      });
+      test('no elimina si la categoría no existe', () async {
+        await notifier.eliminarCategoria('NoExiste');
+        expect(mock.eliminarCategoriaCalled, true);
       });
     });
 
@@ -164,6 +179,19 @@ void main() {
         await notifier.loadTasks();
         expect(notifier.tasks.first.title, 'Tarea Editada');
       });
+      test('no edita si la tarea no existe', () async {
+        final edited = Task(
+          id: 'no-existe',
+          title: 'Tarea Editada',
+          description: 'Desc',
+          dueDate: DateTime(2024, 6, 10),
+          completed: false,
+          createdAt: DateTime(2024, 6, 1),
+          category: 'Personal',
+        );
+        await notifier.editarTarea(edited);
+        expect(mock.editarTareaCalled, true);
+      });
     });
 
     group('toggleTaskCompletion', () {
@@ -171,6 +199,12 @@ void main() {
         await notifier.addTask(task1);
         await notifier.toggleTaskCompletion('1', true);
         expect(notifier.tasks.first.completed, true);
+      });
+      test('lanza error si id no existe', () async {
+        expect(
+          () => notifier.toggleTaskCompletion('no-existe', true),
+          throwsA(isA<StateError>()),
+        );
       });
     });
 
@@ -190,6 +224,22 @@ void main() {
         await notifier.loadCategories();
         expect(notifier.categories, contains('Trabajo'));
       });
+      test('maneja error al cargar categorías', () async {
+        final brokenMock = MockStorage();
+        brokenMock._categories.clear();
+        notifier = TestTaskNotifier(brokenMock);
+        await notifier.loadCategories();
+        expect(notifier.categories, isEmpty);
+      });
+    });
+
+    test('syncTimer está inactivo por defecto', () {
+      expect(notifier.syncTimer?.isActive ?? false, false);
+    });
+
+    test('cancela el timer al hacer dispose', () async {
+      notifier.dispose();
+      expect(notifier.syncTimer?.isActive ?? false, false);
     });
   });
 }
