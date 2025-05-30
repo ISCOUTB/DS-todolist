@@ -109,6 +109,7 @@ class TaskNotifier extends ChangeNotifier {
   Future<void> toggleTaskCompletion(String id, bool isCompleted) async {
     final task = tasks.firstWhere((task) => task.id == id);
     task.completed = isCompleted;
+    editarTarea(task); // Guarda la tarea actualizada
     notifyListeners();
   }
 

@@ -142,12 +142,28 @@ class _CalendarState extends State<Calendar> {
                           child: ListTile(
                             title: Text(task.title),
                             subtitle: Text(task.description),
-                            trailing: Icon(
-                              task.completed
-                                  ? Icons.check_circle
-                                  : Icons.circle_outlined,
-                              color:
-                                  task.completed ? Colors.green : Colors.grey,
+                            trailing: IconButton(
+                              icon: Icon(
+                                task.completed
+                                    ? Icons.check_circle
+                                    : Icons.circle_outlined,
+                                color:
+                                    task.completed ? Colors.green : Colors.grey,
+                              ),
+                              onPressed: () {
+                                final taskNotifier = Provider.of<TaskNotifier>(
+                                  context,
+                                  listen: false,
+                                );
+                                taskNotifier.toggleTaskCompletion(
+                                  task.id,
+                                  !task.completed,
+                                );
+                              },
+                              tooltip:
+                                  task.completed
+                                      ? 'Marcar como pendiente'
+                                      : 'Marcar como completada',
                             ),
                           ),
                         );
