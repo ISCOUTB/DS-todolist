@@ -99,12 +99,16 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Añadir nueva categoría"),
+          title: const Text(
+            "Añadir nueva categoría",
+            style: TextStyle(color: Colors.white),
+          ),
           content: TextField(
             controller: categoryController,
             decoration: const InputDecoration(
-              labelText: "Nombre de la categoría",
-              border: OutlineInputBorder(),
+              hintText: "Nombre de la categoría",
+              hintStyle: TextStyle(color: Colors.grey),
+              border: InputBorder.none,
             ),
           ),
           actions: [

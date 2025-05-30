@@ -70,6 +70,24 @@ class _CalendarState extends State<Calendar> {
       child: Column(
         children: [
           TableCalendar(
+            calendarStyle: CalendarStyle(
+              todayDecoration: BoxDecoration(
+                color: Colors.blueGrey,
+                shape: BoxShape.circle,
+              ),
+              todayTextStyle: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+              selectedDecoration: BoxDecoration(
+                color: Colors.grey,
+                shape: BoxShape.circle,
+              ),
+              selectedTextStyle: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             locale: "es_CO",
             rowHeight: 45,
             headerStyle: const HeaderStyle(
@@ -109,13 +127,13 @@ class _CalendarState extends State<Calendar> {
                           height: 16,
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.blue,
+                            color: Colors.white,
                           ),
                           child: Center(
                             child: Text(
                               '$tasks',
                               style: const TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
                               ),

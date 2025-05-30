@@ -30,6 +30,4 @@ DS-todolist es una aplicación de gestión de tareas desarrollada en Flutter, di
 
 A continuación puedes ver un video demostrativo del funcionamiento de DS-todolist:
 
-<video src="assets/demo.mp4" controls width="600">
-  Tu navegador no soporta la reproducción de videos.
-</video>
+![Demo](assets/demo.gif)
