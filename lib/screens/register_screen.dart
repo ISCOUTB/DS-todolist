@@ -151,7 +151,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       children: [
                         IconButton(
                           onPressed: () {},
-                          icon: Icon(
+                          icon: const Icon(
                             Bootstrap.google,
                             size: 30,
                             color: Colors.black,

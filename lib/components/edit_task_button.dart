@@ -51,7 +51,7 @@ class _EditTaskButtonState extends State<EditTaskButton> {
                   ),
                   child: SingleChildScrollView(
                     child: Container(
-                      padding: EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       decoration: const BoxDecoration(
                         color: Color.fromARGB(102, 170, 170, 170),
                         borderRadius: BorderRadius.only(
@@ -64,7 +64,7 @@ class _EditTaskButtonState extends State<EditTaskButton> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
+                            const Text(
                               'Editar tarea',
                               style: TextStyle(
                                 fontSize: 20,
@@ -92,7 +92,7 @@ class _EditTaskButtonState extends State<EditTaskButton> {
                                 return null;
                               },
                             ),
-                            SizedBox(height: 15),
+                            const SizedBox(height: 15),
                             TextFormField(
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 0, 0, 0),
@@ -114,7 +114,7 @@ class _EditTaskButtonState extends State<EditTaskButton> {
                                     ? 'Seleccionar fecha de vencimiento'
                                     : 'Fecha: ${DateFormat('dd/MM/yyyy').format(_dueDate!)}',
                               ),
-                              trailing: Icon(Icons.calendar_today),
+                              trailing: const Icon(Icons.calendar_today),
                               onTap: () async {
                                 final DateTime? picked = await showDatePicker(
                                   context: context,
@@ -130,14 +130,14 @@ class _EditTaskButtonState extends State<EditTaskButton> {
                                 }
                               },
                             ),
-                            SizedBox(height: 15),
+                            const SizedBox(height: 15),
                             CategoriesSelector(
                               selectedCategory: _category,
                               onCategorySelected: (onCategorySelected) {
                                 _category = onCategorySelected;
                               },
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
 
                             GestureDetector(
                               onTap: editTask,
@@ -150,7 +150,7 @@ class _EditTaskButtonState extends State<EditTaskButton> {
                                   color: Colors.grey,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: Center(
+                                child: const Center(
                                   child: Text(
                                     "Editar tarea",
                                     style: TextStyle(

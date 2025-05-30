@@ -61,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return isloading
-        ? Center(child: CircularProgressIndicator())
+        ? const Center(child: CircularProgressIndicator())
         : Scaffold(
           backgroundColor: Colors.grey[300],
           appBar: AppBar(
@@ -166,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         IconButton(
                           onPressed: () {},
-                          icon: Icon(
+                          icon: const Icon(
                             Bootstrap.google,
                             size: 30,
                             color: Colors.black,
