@@ -148,7 +148,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
         alignment: AlignmentDirectional.bottomStart,
         child: AutoSizeText(
           'Categorías',
-          minFontSize: 14,
+          minFontSize: 18,
           maxFontSize: 30,
           style: TextStyle(
             color: Colors.white,
