@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_list/components/add_task_button.dart';
 import 'package:to_do_list/components/search_textfield.dart';
+import 'package:to_do_list/components/user_button.dart';
+import 'package:to_do_list/components/sorter_button.dart';
 import 'package:to_do_list/widgets/calendar.dart';
 import 'package:to_do_list/widgets/drawer_widget.dart';
 import 'package:to_do_list/widgets/responsive_widget.dart';
@@ -15,38 +17,53 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0; // Índice de la vista seleccionada
+  bool _isDesktop = false; // Estado para rastrear si estamos en escritorio
 
   final List<Widget> _views = [
     ResponsiveWidget(
-      mobileLayout: BuildMobileLayout(),
-      tabletLayout: BuildTabletLayout(),
-      desktopLayout: BuildDesktopLayout(),
+      mobileLayout: buildMobileLayout(),
+      tabletLayout: buildTabletLayout(),
+      desktopLayout: buildDesktopLayout(),
     ),
     Calendar(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = ResponsiveWidget.isMobile(context);
     final isDesktop = ResponsiveWidget.isDesktop(context);
+
+    // Detecta el cambio a la vista de escritorio
+    if (isDesktop && !_isDesktop) {
+      setState(() {
+        _isDesktop = true;
+        _currentIndex = 0; // Cambia automáticamente a la vista principal
+      });
+    } else if (!isDesktop && _isDesktop) {
+      setState(() {
+        _isDesktop = false;
+      });
+    }
+
+    final isMobile = ResponsiveWidget.isMobile(context);
 
     return Scaffold(
       appBar: AppBar(
         title: SearchTextfield(),
-        actions: [
-          AddTaskButton(),
-        ],
+        actions: const [SorterButton(), UserButton()],
       ),
       drawer: isMobile ? const Drawer(child: DrawerWidget()) : null,
       body: _views[_currentIndex],
+      floatingActionButton:
+          _currentIndex == 0
+              ? const AddTaskButton() // Solo muestra el botón en la vista de tareas
+              : null,
       bottomNavigationBar:
           !isDesktop
               ? BottomNavigationBar(
-                currentIndex: _currentIndex, // Índice actual
+                currentIndex: _currentIndex,
                 onTap: (index) {
                   setState(() {
-                    _currentIndex =
-                        index; // Cambia la vista al seleccionar una pestaña
+                    _currentIndex = index;
                   });
                 },
                 items: const [
@@ -65,17 +82,17 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget BuildMobileLayout() =>
+Widget buildMobileLayout() =>
     Container(color: Colors.white, child: Center(child: TaskWidget()));
 
-Widget BuildTabletLayout() => Row(
+Widget buildTabletLayout() => const Row(
   children: [
     Expanded(flex: 2, child: DrawerWidget()),
     Expanded(flex: 5, child: TaskWidget()),
   ],
 );
 
-Widget BuildDesktopLayout() => Row(
+Widget buildDesktopLayout() => const Row(
   children: [
     Expanded(flex: 2, child: DrawerWidget()),
     Expanded(flex: 5, child: TaskWidget()),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:to_do_list/components/categories_selector.dart';
 import 'package:to_do_list/models/task.dart';
 import 'package:to_do_list/services/task_notifier.dart';
-import 'package:uuid/uuid.dart';
 
 class EditTaskButton extends StatefulWidget {
   final Task task;
@@ -17,20 +17,21 @@ class _EditTaskButtonState extends State<EditTaskButton> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  String? _category;
   DateTime? _dueDate;
+  DateTime? _createdAt;
   bool _isCompleted = false;
-  
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _titleController.text = widget.task.title;
     _descriptionController.text = widget.task.description;
     _dueDate = widget.task.dueDate;
     _isCompleted = widget.task.completed;
-
+    _createdAt = widget.task.createdAt;
+    _category = widget.task.category;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -48,101 +49,121 @@ class _EditTaskButtonState extends State<EditTaskButton> {
                   padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom,
                   ),
-                  child: Container(
-                    padding: EdgeInsets.all(20),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Editar tarea',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                  child: SingleChildScrollView(
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(102, 170, 170, 170),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+                      ),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Editar tarea',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 20),
-                          TextFormField(
-                            controller: _titleController,
-                            decoration: InputDecoration(
-                              labelText: 'Título',
-                              border: OutlineInputBorder(),
+                            const SizedBox(height: 20),
+                            TextFormField(
+                              style: const TextStyle(
+                                color: Color.fromARGB(255, 0, 0, 0),
+                              ),
+                              controller: _titleController,
+                              decoration: const InputDecoration(
+                                hintText: 'Título',
+                                hintStyle: TextStyle(
+                                  //colorColor.fromARGB(255, 64, 64, 64)anco
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                ),
+                                border: OutlineInputBorder(),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor ingresa un título';
+                                }
+                                return null;
+                              },
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Por favor ingresa un título';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: 15),
-                          TextFormField(
-                            controller: _descriptionController,
-                            decoration: InputDecoration(
-                              labelText: 'Descripción',
-                              border: OutlineInputBorder(),
+                            SizedBox(height: 15),
+                            TextFormField(
+                              style: const TextStyle(
+                                color: Color.fromARGB(255, 0, 0, 0),
+                              ),
+                              controller: _descriptionController,
+                              decoration: const InputDecoration(
+                                hintText: 'Descripción',
+                                hintStyle: TextStyle(
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                ),
+                                border: OutlineInputBorder(),
+                              ),
+                              maxLines: 2,
                             ),
-                            maxLines: 3,
-                          ),
-                          SizedBox(height: 15),
-                          ListTile(
-                            title: Text(
-                              _dueDate == null
-                                  ? 'Seleccionar fecha de vencimiento'
-                                  : 'Fecha: ${DateFormat('dd/MM/yyyy').format(_dueDate!)}',
-                            ),
-                            trailing: Icon(Icons.calendar_today),
-                            onTap: () async {
-                              final DateTime? picked = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now(),
-                                firstDate: DateTime.now(),
-                                lastDate: DateTime(2100),
-                              );
+                            const SizedBox(height: 15),
+                            ListTile(
+                              title: Text(
+                                _dueDate == null
+                                    ? 'Seleccionar fecha de vencimiento'
+                                    : 'Fecha: ${DateFormat('dd/MM/yyyy').format(_dueDate!)}',
+                              ),
+                              trailing: Icon(Icons.calendar_today),
+                              onTap: () async {
+                                final DateTime? picked = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime.now(),
+                                  lastDate: DateTime(2100),
+                                );
 
-                              if (picked != null && picked != _dueDate) {
-                                setModalState(() {
-                                  _dueDate = picked;
-                                });
-                              }
-                            },
-                          ),
-                          SizedBox(height: 15),
-                          CheckboxListTile(
-                            title: Text('Completada'),
-                            value: _isCompleted,
-                            onChanged: (bool? value) {
-                              setModalState(() {
-                                _isCompleted = value ?? false;
-                              });
-                            },
-                          ),
-                          SizedBox(height: 20),
-                          GestureDetector(
-                            onTap: editTask,
-                            child: Container(
-                              padding: const EdgeInsets.all(25),
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 25,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Editar tarea",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
+                                if (picked != null && picked != _dueDate) {
+                                  setModalState(() {
+                                    _dueDate = picked;
+                                  });
+                                }
+                              },
+                            ),
+                            SizedBox(height: 15),
+                            CategoriesSelector(
+                              selectedCategory: _category,
+                              onCategorySelected: (onCategorySelected) {
+                                _category = onCategorySelected;
+                              },
+                            ),
+                            SizedBox(height: 20),
+
+                            GestureDetector(
+                              onTap: editTask,
+                              child: Container(
+                                padding: const EdgeInsets.all(25),
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 25,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "Editar tarea",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -163,13 +184,13 @@ class _EditTaskButtonState extends State<EditTaskButton> {
         description: _descriptionController.text,
         dueDate: _dueDate,
         completed: _isCompleted,
-        createdAt: DateTime.now(),
-        category: "General",
+        createdAt:
+            _createdAt ?? DateTime.now(), // Mantiene la fecha de creación
+        category: _category ?? "General",
       );
 
       try {
         context.read<TaskNotifier>().editarTarea(newTask);
-        debugPrint('Edit successfully');
         Navigator.pop(context); // Cierra el modal
 
         _titleController.clear(); // Limpia el campo de título

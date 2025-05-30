@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:to_do_list/components/edit_task_button.dart';
 import 'package:to_do_list/models/task.dart';
 
-class ListItemWidget extends StatelessWidget {
+class ListItemWidget extends StatefulWidget {
   final Task task;
   final VoidCallback onDelete;
   final ValueChanged<bool?> onToggleCompleted;
@@ -15,57 +15,123 @@ class ListItemWidget extends StatelessWidget {
   });
 
   @override
+  State<ListItemWidget> createState() => _ListItemWidgetState();
+}
+
+class _ListItemWidgetState extends State<ListItemWidget> {
+  bool _isExpanded = false; // Estado para la descripción expandida
+  bool _isTitleExpanded = false; // Estado para el título expandido
+
+  @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      elevation: 6,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Column(
-          mainAxisSize: MainAxisSize.min, // Ajusta la altura al contenido
+    return Container(
+      // Contenedor para el ListTile de las tareas
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(69, 170, 170, 170),
+        borderRadius: BorderRadius.circular(6),
+        boxShadow: [
+          BoxShadow(
+            color: const Color.fromARGB(
+              255,
+              100,
+              100,
+              100,
+            ).withAlpha((0.2 * 255).toInt()), // Sombra más suave
+            blurRadius: 8, // Difuminado
+            offset: const Offset(2, 4), // Desplazamiento horizontal y vertical
+          ),
+        ],
+      ),
+      child: ListTile(
+        title: GestureDetector(
+          onTap: () {
+            setState(() {
+              _isTitleExpanded = !_isTitleExpanded;
+            });
+          },
+          child: AnimatedCrossFade(
+            duration: const Duration(milliseconds: 200),
+            firstChild: Text(
+              widget.task.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                decoration:
+                    widget.task.completed
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+              ),
+            ),
+            secondChild: Text(
+              widget.task.title,
+              style: TextStyle(
+                decoration:
+                    widget.task.completed
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+              ),
+            ),
+            crossFadeState:
+                _isTitleExpanded
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
+          ),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ListTile(
-              title: Text(
-                task.title,
-                style: TextStyle(
-                  decoration:
-                      task.completed
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
-                ),
-                maxLines: 1,
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (task.description.isNotEmpty) Text(task.description),
-                  Text(
-                    'Vence: ${task.dueDate?.day}/${task.dueDate?.month}/${task.dueDate?.year}',
-                    style: TextStyle(
-                      color:
-                          task.dueDate!.isBefore(DateTime.now()) &&
-                                  !task.completed
-                              ? Colors.red
-                              : null,
-                    ),
-                    maxLines: 1,
+            if (widget.task.description.isNotEmpty)
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _isExpanded = !_isExpanded;
+                  });
+                },
+                child: AnimatedCrossFade(
+                  duration: const Duration(milliseconds: 200),
+                  firstChild: Text(
+                    widget.task.description,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  if (task.category.isNotEmpty)
-                    Text(
-                      'Categoria: ${task.category}',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                ],
+                  secondChild: Text(widget.task.description),
+                  crossFadeState:
+                      _isExpanded
+                          ? CrossFadeState.showSecond
+                          : CrossFadeState.showFirst,
+                ),
               ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  EditTaskButton(task: task),
-                  IconButton(icon: Icon(Icons.delete), onPressed: onDelete),
-                  Checkbox(value: task.completed, onChanged: onToggleCompleted),
-                ],
+            Text(
+              'Vence: ${widget.task.dueDate?.day}/${widget.task.dueDate?.month}/${widget.task.dueDate?.year}',
+              style: TextStyle(
+                color:
+                    widget.task.dueDate != null &&
+                            widget.task.dueDate!.isBefore(DateTime.now()) &&
+                            !widget.task.completed
+                        ? Colors.red
+                        : null,
               ),
+              maxLines: 1,
+            ),
+            if (widget.task.category.isNotEmpty)
+              Text(
+                'Categoria: ${widget.task.category}',
+                style: const TextStyle(color: Colors.grey),
+              ),
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            EditTaskButton(task: widget.task),
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: widget.onDelete,
+            ),
+            Checkbox(
+              value: widget.task.completed,
+              onChanged: widget.onToggleCompleted,
             ),
           ],
         ),
