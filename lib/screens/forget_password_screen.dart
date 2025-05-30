@@ -54,7 +54,7 @@ class ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
             child: Column(
               children: [
                 const SizedBox(height: 50),
-                const Icon(Icons.password, size: 100),
+                const Icon(Icons.password, size: 100, color: Colors.black),
                 const SizedBox(height: 50),
 
                 Text(

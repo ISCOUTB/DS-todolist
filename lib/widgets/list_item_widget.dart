@@ -28,16 +28,12 @@ class _ListItemWidgetState extends State<ListItemWidget> {
       // Contenedor para el ListTile de las tareas
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-<<<<<<< HEAD
-        color: const Color.fromARGB(69, 170, 170, 170),
-=======
         color:
             widget.task.completed
                 ? Color.fromARGB(69, 170, 170, 170).withAlpha(
                   25,
                 ) // Fondo verde suave si está completada
                 : Color.fromARGB(69, 170, 170, 170), // Fondo normal si no
->>>>>>> origin/Anderson
         borderRadius: BorderRadius.circular(6),
         boxShadow: [
           BoxShadow(

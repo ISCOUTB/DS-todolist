@@ -86,7 +86,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Column(
                   children: [
                     const SizedBox(height: 10),
-                    const Icon(Icons.supervised_user_circle, size: 100),
+                    const Icon(
+                      Icons.supervised_user_circle,
+                      size: 100,
+                      color: Colors.black,
+                    ),
                     const SizedBox(height: 40),
                     Text(
                       "Registrate como un nuevo usuario",
@@ -147,7 +151,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       children: [
                         IconButton(
                           onPressed: () {},
-                          icon: Icon(Bootstrap.google, size: 30),
+                          icon: Icon(
+                            Bootstrap.google,
+                            size: 30,
+                            color: Colors.black,
+                          ),
                         ),
                       ],
                     ),

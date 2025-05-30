@@ -63,7 +63,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   ),
                 ),
                 onTap: () {
-                  final TextEditingController _controller =
+                  final TextEditingController controller =
                       TextEditingController();
                   showDialog(
                     context: context,
@@ -74,7 +74,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                           style: TextStyle(color: Colors.white),
                         ),
                         content: TextField(
-                          controller: _controller,
+                          controller: controller,
                           decoration: const InputDecoration(
                             hintText: 'Nombre de la categoría',
                             hintStyle: TextStyle(
@@ -99,7 +99,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                               ),
                             ),
                             onPressed: () async {
-                              final value = _controller.text.trim();
+                              final value = controller.text.trim();
                               if (value.isNotEmpty) {
                                 final storage =
                                     Provider.of<TaskNotifier>(
