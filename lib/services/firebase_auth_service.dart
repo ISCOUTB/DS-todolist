@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 const String exito = "Éxito";
+const String usernotfound = 'user-not-found';
+const String nouserfoundemail = 'No user found for that email.';
 
 void errorSnackbar(String message) {
   Get.snackbar(
@@ -33,8 +35,8 @@ class FirebaseAuthService {
         colorText: Colors.white,
       );
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        errorSnackbar('No user found for that email.');
+      if (e.code == usernotfound) {
+        errorSnackbar(nouserfoundemail);
       } else if (e.code == 'wrong-password') {
         errorSnackbar('Wrong password provided for that user.');
       } else {
@@ -98,8 +100,8 @@ class FirebaseAuthService {
         colorText: Colors.white,
       );
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        errorSnackbar('No user found for that email.');
+      if (e.code == usernotfound) {
+        errorSnackbar(nouserfoundemail);
       } else {
         errorSnackbar('Error sending password reset email: ${e.code}');
       }
@@ -125,8 +127,8 @@ class FirebaseAuthService {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
         errorSnackbar('The email address is not valid.');
-      } else if (e.code == 'user-not-found') {
-        errorSnackbar('No user found for that email.');
+      } else if (e.code == usernotfound) {
+        errorSnackbar(nouserfoundemail);
       } else {
         errorSnackbar('Error validating email: ${e.code}');
       }

@@ -70,7 +70,7 @@ class _CalendarState extends State<Calendar> {
       child: Column(
         children: [
           TableCalendar(
-            calendarStyle: CalendarStyle(
+            calendarStyle: const CalendarStyle(
               todayDecoration: BoxDecoration(
                 color: Colors.blueGrey,
                 shape: BoxShape.circle,

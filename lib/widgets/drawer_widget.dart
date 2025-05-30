@@ -65,13 +65,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 onTap: () {
                   final TextEditingController controller =
                       TextEditingController();
+
                   showDialog(
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        title: const Text(
-                          'Nueva Categoría',
-                          style: TextStyle(color: Colors.white),
+                        title: Text(
+                          'Agregar Categoría',
+                          style: const TextStyle(color: Colors.white),
                         ),
                         content: TextField(
                           controller: controller,

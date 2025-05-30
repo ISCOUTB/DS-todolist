@@ -30,10 +30,10 @@ class _ListItemWidgetState extends State<ListItemWidget> {
       decoration: BoxDecoration(
         color:
             widget.task.completed
-                ? Color.fromARGB(69, 170, 170, 170).withAlpha(
+                ? const Color.fromARGB(69, 170, 170, 170).withAlpha(
                   25,
                 ) // Fondo verde suave si está completada
-                : Color.fromARGB(69, 170, 170, 170), // Fondo normal si no
+                : const Color.fromARGB(69, 170, 170, 170), // Fondo normal si no
         borderRadius: BorderRadius.circular(6),
         boxShadow: [
           BoxShadow(
