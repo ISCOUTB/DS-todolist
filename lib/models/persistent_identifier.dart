@@ -22,7 +22,6 @@ class PersistentIdentifier {
       // Si no, genera uno con prefijo Fire-
       String base = user.displayName ?? user.email ?? '';
       base = base.replaceAll(RegExp(r'[^a-zA-Z]'), '');
-      if (base.length > 4) base = base.substring(0, 4);
       final nuevoId = 'Fire-$base${user.uid}';
       await prefs.setString(_keyDeviceId, nuevoId);
       return nuevoId;
