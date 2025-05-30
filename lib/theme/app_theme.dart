@@ -10,12 +10,15 @@ class AppTheme {
       elevation: 0,
     ),
     textTheme: const TextTheme(
-      bodySmall: TextStyle(color: Colors.white),
+      bodySmall: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
       bodyMedium: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-      bodyLarge: TextStyle(color: Colors.white),
+      bodyLarge: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
       titleLarge: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       titleMedium: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-      titleSmall: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      titleSmall: TextStyle(
+        color: Color.fromARGB(255, 0, 0, 0),
+        fontWeight: FontWeight.bold,
+      ),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
@@ -29,7 +32,7 @@ class AppTheme {
       ),
     ),
     textSelectionTheme: const TextSelectionThemeData(
-      cursorColor: Colors.white, // Color del cursor
+      cursorColor: Colors.blueGrey, // Color del cursor
       selectionColor: Colors.grey, // Fondo de selección
       selectionHandleColor: Colors.grey, // Color de los handles
     ),

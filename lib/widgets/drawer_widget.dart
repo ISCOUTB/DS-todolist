@@ -27,7 +27,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final fontSize = MediaQuery.of(context).size.width * 0.025;
+    final fontSize = MediaQuery.of(context).size.width * 0.015;
 
     return FutureBuilder<List<String>>(
       future: _categoriesFuture,
@@ -55,36 +55,26 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 leading: const Icon(Icons.add),
                 title: AutoSizeText(
                   'Agregar Categoría',
-                  minFontSize: 18,
+                  minFontSize: 8,
                   maxFontSize: 25,
                   style: TextStyle(
-                    fontSize: fontSize,
+                    fontSize: MediaQuery.of(context).size.width * 0.015,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 onTap: () {
-                  // la lógica para agregar una nueva categoría
+                  final TextEditingController controller =
+                      TextEditingController();
                   showDialog(
                     context: context,
                     builder: (context) {
                       return AlertDialog(
                         title: const Text(
-                          'Agregar Categoría', //Widget cateiora inicio
+                          'Nueva Categoría',
                           style: TextStyle(color: Colors.white),
                         ),
                         content: TextField(
-                          onSubmitted: (value) async {
-                            final storage =
-                                Provider.of<TaskNotifier>(
-                                  context,
-                                  listen: false,
-                                ).storage;
-                            await storage.agregarCategoria(value);
-                            if (context.mounted) {
-                              _loadCategories(); // Recargar categorías después de agregar
-                              Navigator.of(context).pop();
-                            } // <--- chequeo de seguridad
-                          },
+                          controller: controller,
                           decoration: const InputDecoration(
                             hintText: 'Nombre de la categoría',
                             hintStyle: TextStyle(
@@ -92,6 +82,40 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                             ),
                           ),
                         ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Cancelar
+                            },
+                            child: const Text('Cancelar'),
+                          ),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              backgroundColor: const Color.fromARGB(
+                                255,
+                                28,
+                                28,
+                                28,
+                              ),
+                            ),
+                            onPressed: () async {
+                              final value = controller.text.trim();
+                              if (value.isNotEmpty) {
+                                final storage =
+                                    Provider.of<TaskNotifier>(
+                                      context,
+                                      listen: false,
+                                    ).storage;
+                                await storage.agregarCategoria(value);
+                                if (context.mounted) {
+                                  _loadCategories();
+                                  Navigator.of(context).pop();
+                                }
+                              }
+                            },
+                            child: const Text('Añadir'),
+                          ),
+                        ],
                       );
                     },
                   );
@@ -124,7 +148,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
         alignment: AlignmentDirectional.bottomStart,
         child: AutoSizeText(
           'Categorías',
-          minFontSize: 22,
+          minFontSize: 14,
           maxFontSize: 30,
           style: TextStyle(
             color: Colors.white,

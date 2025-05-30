@@ -26,6 +26,7 @@ class SearchTextfield extends StatelessWidget {
       child: TextField(
         style: const TextStyle(color: Colors.white), // Letras blancas
         decoration: const InputDecoration(
+          // Cambia el color del borde a transparente
           filled: true,
           fillColor: Color.fromARGB(69, 170, 170, 170), // Fondo gris
           hintText: "Buscar tareas...",
@@ -33,7 +34,12 @@ class SearchTextfield extends StatelessWidget {
             color: Color.fromARGB(179, 255, 255, 255),
           ), // Hint blanco tenue
           prefixIcon: Icon(Icons.search),
-          border: InputBorder.none,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ), // Igual que el Container
+            borderSide: BorderSide.none, // Sin borde visible
+          ),
           contentPadding: EdgeInsets.symmetric(vertical: 10),
         ),
         onChanged: (value) {

@@ -80,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   children: [
                     const SizedBox(height: 50),
-                    const Icon(Icons.lock, size: 100),
+                    const Icon(Icons.lock, size: 100, color: Colors.black),
                     const SizedBox(height: 50),
 
                     Text(
@@ -166,7 +166,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         IconButton(
                           onPressed: () {},
-                          icon: Icon(Bootstrap.google, size: 30),
+                          icon: Icon(
+                            Bootstrap.google,
+                            size: 30,
+                            color: Colors.black,
+                          ),
                         ),
                       ],
                     ),
