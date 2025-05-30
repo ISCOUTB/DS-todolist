@@ -255,7 +255,7 @@ void main() {
       if (Hive.isBoxOpen(boxName)) {
         await Hive.box<Task>(boxName).close();
       }
-      Hive.deleteBoxFromDisk(boxName);
+      await Hive.deleteBoxFromDisk(boxName);
       final task = Task(
         id: '1',
         title: 'Error',
@@ -267,6 +267,7 @@ void main() {
       );
       final result = await hiveStorage.editarTarea(task);
       expect(result, false);
+      // Reabre el box para siguientes tests
       await Hive.openBox<Task>(boxName);
     });
 
