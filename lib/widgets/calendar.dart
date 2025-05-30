@@ -165,7 +165,9 @@ class _CalendarState extends State<Calendar> {
                                   ? Icons.check_circle
                                   : Icons.circle_outlined,
                               color:
-                                  task.completed ? Colors.green : Colors.grey,
+                                  task.completed
+                                      ? const Color.fromARGB(255, 76, 175, 80)
+                                      : Colors.grey,
                             ),
                           ),
                         );

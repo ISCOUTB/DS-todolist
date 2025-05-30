@@ -28,7 +28,12 @@ class _ListItemWidgetState extends State<ListItemWidget> {
       // Contenedor para el ListTile de las tareas
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: Color.fromARGB(69, 170, 170, 170),
+        color:
+            widget.task.completed
+                ? Color.fromARGB(69, 170, 170, 170).withAlpha(
+                  25,
+                ) // Fondo verde suave si está completada
+                : Color.fromARGB(69, 170, 170, 170), // Fondo normal si no
         borderRadius: BorderRadius.circular(6),
         boxShadow: [
           BoxShadow(
@@ -37,7 +42,7 @@ class _ListItemWidgetState extends State<ListItemWidget> {
               100,
               100,
               100,
-            ).withAlpha((0.2 * 255).toInt()), // Sombra más suave
+            ).withAlpha((0.2 * 255).toInt()),
             blurRadius: 8, // Difuminado
             offset: Offset(2, 4), // Desplazamiento horizontal y vertical
           ),
@@ -57,19 +62,31 @@ class _ListItemWidgetState extends State<ListItemWidget> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
+                color:
+                    widget.task.completed
+                        ? const Color.fromARGB(255, 76, 175, 80)
+                        : const Color.fromARGB(255, 255, 255, 255),
                 decoration:
                     widget.task.completed
                         ? TextDecoration.lineThrough
                         : TextDecoration.none,
+                fontWeight:
+                    widget.task.completed ? FontWeight.bold : FontWeight.normal,
               ),
             ),
             secondChild: Text(
               widget.task.title,
               style: TextStyle(
+                color:
+                    widget.task.completed
+                        ? const Color.fromARGB(255, 76, 175, 80)
+                        : const Color.fromARGB(255, 255, 255, 255),
                 decoration:
                     widget.task.completed
                         ? TextDecoration.lineThrough
                         : TextDecoration.none,
+                fontWeight:
+                    widget.task.completed ? FontWeight.bold : FontWeight.normal,
               ),
             ),
             crossFadeState:
