@@ -32,16 +32,19 @@ class TaskNotifier extends ChangeNotifier {
       storage = StorageSwitch(HiveStorage());
 
       // Configura la sincronización con la API cada hora si hay conexión
-      _startSyncWithApi();
+      startSyncWithApi();
     } else {
       // Por defecto, usa Hive
       storage = StorageSwitch(HiveStorage());
     }
   }
 
-  Future<void> _startSyncWithApi() async {
+  Future<void> startSyncWithApi() async {
     // Cancela el temporizador anterior si existe
-    _syncTimer?.cancel();
+    if (_syncTimer != null) {
+      _syncTimer!.cancel();
+      _syncTimer = null;
+    }
 
     final connectivity = Connectivity();
     final firebaseAuth = FirebaseAuth.instance;
