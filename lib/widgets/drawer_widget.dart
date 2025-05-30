@@ -58,7 +58,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   minFontSize: 8,
                   maxFontSize: 25,
                   style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width * 0.015,
+                    fontSize: MediaQuery.of(context).size.width * 0.025,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
