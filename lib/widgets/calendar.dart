@@ -72,11 +72,11 @@ class _CalendarState extends State<Calendar> {
           TableCalendar(
             locale: "es_CO",
             rowHeight: 45,
-            headerStyle: HeaderStyle(
+            headerStyle: const HeaderStyle(
               titleCentered: true,
               formatButtonVisible: false,
-              headerPadding: const EdgeInsets.only(bottom: 10),
-              headerMargin: const EdgeInsets.only(bottom: 16),
+              headerPadding: EdgeInsets.only(bottom: 10),
+              headerMargin: EdgeInsets.only(bottom: 16),
               decoration: BoxDecoration(
                 border: Border(
                   bottom: BorderSide(color: Colors.grey, width: 1.5),
@@ -107,14 +107,14 @@ class _CalendarState extends State<Calendar> {
                         child: Container(
                           width: 16,
                           height: 16,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.blue,
                           ),
                           child: Center(
                             child: Text(
                               '$tasks',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,

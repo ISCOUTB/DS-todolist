@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
       tabletLayout: buildTabletLayout(),
       desktopLayout: buildDesktopLayout(),
     ),
-    Calendar(),
+    const Calendar(),
   ];
 
   @override
@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: SearchTextfield(),
+        title: const SearchTextfield(),
         actions: const [SorterButton(), UserButton()],
       ),
       drawer: isMobile ? const Drawer(child: DrawerWidget()) : null,
@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 Widget buildMobileLayout() =>
-    Container(color: Colors.white, child: Center(child: TaskWidget()));
+    Container(color: Colors.white, child: const Center(child: TaskWidget()));
 
 Widget buildTabletLayout() => const Row(
   children: [
