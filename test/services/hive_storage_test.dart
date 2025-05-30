@@ -69,6 +69,24 @@ void main() {
       expect(box.get('1'), null);
     });
 
+    test(
+      'Al abrir el box de categorías vacío, inicializa con categorías por defecto',
+      () async {
+        // Cierra y elimina el box para simular primer uso
+        final boxName = 'categories';
+        if (Hive.isBoxOpen(boxName)) {
+          await Hive.box<String>(boxName).close();
+        }
+        await Hive.deleteBoxFromDisk(boxName);
+
+        final hiveStorage = HiveStorage();
+        // Forzamos la apertura del box usando leerCategorias (que usa _getBox)
+        final categorias = await hiveStorage.leerCategorias();
+
+        expect(categorias, containsAll(['General', 'Trabajo', 'Personal']));
+      },
+    );
+
     test('Debería leer tareas de Hive', () async {
       final task1 = Task(
         id: '1',

@@ -9,9 +9,19 @@ class HiveStorage implements StorageStrategy {
 
   Future<Box<T>> _getBox<T>(String name) async {
     if (Hive.isBoxOpen(name)) {
-      return Hive.box<T>(name);
+      final box = Hive.box<T>(name);
+      // Inicializa categorías por defecto si es el box de categorías y está vacío
+      if (name == categoryBoxName && box.isEmpty) {
+        await box.addAll(['General', 'Trabajo', 'Personal'] as Iterable<T>);
+      }
+      return box;
     } else {
-      return await Hive.openBox<T>(name);
+      final box = await Hive.openBox<T>(name);
+      // Inicializa categorías por defecto si es el box de categorías y está vacío
+      if (name == categoryBoxName && box.isEmpty) {
+        await box.addAll(['General', 'Trabajo', 'Personal'] as Iterable<T>);
+      }
+      return box;
     }
   }
 
