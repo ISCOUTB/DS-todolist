@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin notificationPlugin;
-  final bool _isInitialized = false;
+  bool _isInitialized = false;
 
   NotificationService({FlutterLocalNotificationsPlugin? plugin})
     : notificationPlugin = plugin ?? FlutterLocalNotificationsPlugin();
@@ -21,6 +21,7 @@ class NotificationService {
     );
 
     await notificationPlugin.initialize(initSettings);
+    _isInitialized = true;
   }
 
   NotificationDetails notificationDetails() {

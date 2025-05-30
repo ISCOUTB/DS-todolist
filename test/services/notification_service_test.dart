@@ -58,5 +58,24 @@ void main() {
       await notificationService.showNotification([task]);
       verifyNoMoreInteractions(mockPlugin);
     });
+
+    test('initNotification inicializa el plugin solo una vez', () async {
+      final mockPlugin = MockFlutterLocalNotificationsPlugin();
+      when(mockPlugin.initialize(any)).thenAnswer((_) async => true);
+
+      final service = NotificationService(plugin: mockPlugin);
+
+      // Llama por primera vez: debe inicializar
+      await service.initNotification();
+      verify(mockPlugin.initialize(any)).called(1);
+
+      // Llama por segunda vez: NO debe volver a inicializar
+      await service.initNotification();
+      verifyNoMoreInteractions(mockPlugin);
+
+      // El getter debe ser true después de inicializar
+      expect(service.isInitialized, isTrue);
+    });
+    // ...existing code...
   });
 }
