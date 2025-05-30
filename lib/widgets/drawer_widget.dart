@@ -16,13 +16,13 @@ class _DrawerWidgetState extends State<DrawerWidget> {
   @override
   void initState() {
     super.initState();
-    _loadCategories();
+    final storage = context.read<TaskNotifier>().storage;
+    _categoriesFuture = storage.leerCategorias();
   }
 
   void _loadCategories() {
     final storage = context.read<TaskNotifier>().storage;
     _categoriesFuture = storage.leerCategorias();
-    setState(() {}); // Asegura que el widget se reconstruya
   }
 
   @override
@@ -131,19 +131,13 @@ class _DrawerWidgetState extends State<DrawerWidget> {
 
   Widget buildHeader(double fontSize) => GestureDetector(
     onTap: () {
-      // Aquí puedes agregar la lógica para manejar el toque en el encabezado
       context
           .read<TaskNotifier>()
           .loadTasks(); // Recargar tareas al tocar el encabezado
     },
     child: DrawerHeader(
       decoration: const BoxDecoration(
-        color: Color.fromARGB(
-          102,
-          170,
-          170,
-          170,
-        ), // Color de fondo del encabezado de "Categorias"
+        color: Color.fromARGB(102, 170, 170, 170),
       ),
       child: Container(
         alignment: AlignmentDirectional.bottomStart,
@@ -164,7 +158,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
   Widget buildMenuItem(String categoryName, double fontSize) => ListTile(
     leading: const Icon(Icons.category),
     title: AutoSizeText(
-      categoryName, // Mostrar el nombre de la categoría
+      categoryName,
       minFontSize: 18,
       maxFontSize: 25,
       style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500),
@@ -174,13 +168,12 @@ class _DrawerWidgetState extends State<DrawerWidget> {
       final storage = Provider.of<TaskNotifier>(context, listen: false).storage;
       final filteredTasks = await storage.leerCategoriasFiltradas(categoryName);
 
-      if (!mounted) return; // <--- chequeo de seguridad
+      if (!mounted) return;
 
       debugPrint('Filtered tasks: $filteredTasks');
       context.read<TaskNotifier>().loadFilteredTasks(filteredTasks);
     },
     onLongPress: () {
-      // Aquí puedes agregar la lógica para eliminar la categoría
       showDialog(
         context: context,
         builder: (context) {
@@ -199,9 +192,9 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     categoryName,
                   );
                   if (context.mounted) {
-                    _loadCategories(); // Recargar categorías después de eliminar
+                    _loadCategories();
                     Navigator.of(context).pop();
-                  } // <--- chequeo de seguridad
+                  }
                 },
                 child: const Text('Eliminar'),
               ),
