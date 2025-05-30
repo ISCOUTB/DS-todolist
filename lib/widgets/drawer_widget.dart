@@ -70,9 +70,9 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        title: Text(
+                        title: const Text(
                           'Agregar Categoría',
-                          style: const TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.white),
                         ),
                         content: TextField(
                           controller: controller,
@@ -149,7 +149,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
         alignment: AlignmentDirectional.bottomStart,
         child: AutoSizeText(
           'Categorías',
-          minFontSize: 14,
+          minFontSize: 18,
           maxFontSize: 30,
           style: TextStyle(
             color: Colors.white,
@@ -185,7 +185,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Eliminar Categoría'),
+            title: const Text(
+              'Eliminar Categoría',
+              style: TextStyle(color: Colors.white),
+            ),
             content: Text(
               '¿Estás seguro de que deseas eliminar $categoryName?',
             ),
