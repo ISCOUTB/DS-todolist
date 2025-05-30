@@ -1,3 +1,4 @@
+import unicodedata
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
@@ -108,8 +109,24 @@ def buscar_categoria(nombre_archivo, nombre_categoria):
     except KeyError:
         return []
 
+def normalizar_texto(texto):
+    """Normaliza texto: quita acentos, pasa a minúsculas y elimina caracteres especiales."""
+    if not isinstance(texto, str):
+        return ""
+    texto = texto.strip()
+    texto = unicodedata.normalize('NFD', texto)
+    texto = ''.join(c for c in texto if unicodedata.category(c) != 'Mn')
+    texto = texto.lower()
+    return texto
+
+def capitalizar_categoria(texto):
+    """Devuelve el texto con la primera letra en mayúscula y el resto en minúscula."""
+    if not texto:
+        return ""
+    return texto.strip().capitalize()
+
 def agregar_categoria(nombre_archivo, nueva_categoria):
-    """Agrega una nueva categoría al archivo JSON."""
+    """Agrega una nueva categoría al archivo JSON evitando duplicados."""
     inicializar_archivo(nombre_archivo)
     ruta_archivo = os.path.join(BASE_DIR, nombre_archivo)
     try:
@@ -117,10 +134,17 @@ def agregar_categoria(nombre_archivo, nueva_categoria):
         if "categories" not in datos_existentes:
             datos_existentes["categories"] = []
 
-        if any(categoria["name"] == nueva_categoria for categoria in datos_existentes["categories"]):
-            return {"mensaje": "La categoría ya existe."}
+        # Normaliza la nueva categoría para comparar
+        nueva_categoria_normalizada = normalizar_texto(nueva_categoria)
 
-        datos_existentes["categories"].append({"name": nueva_categoria})
+        # Verifica duplicados considerando normalización
+        for categoria in datos_existentes["categories"]:
+            if normalizar_texto(categoria["name"]) == nueva_categoria_normalizada:
+                return {"mensaje": "La categoría ya existe."}
+
+        # Guarda la categoría con la primera letra en mayúscula
+        categoria_final = capitalizar_categoria(nueva_categoria)
+        datos_existentes["categories"].append({"name": categoria_final})
 
         with open(ruta_archivo, mode='w', encoding='utf-8') as file:
             json.dump(datos_existentes, file, ensure_ascii=False, indent=4)
@@ -222,7 +246,7 @@ def unir_archivos():
     data = request.json
     origen = data.get("origen")  # sin ".json"
     destino = data.get("destino")  # sin ".json"
-    
+
     if not origen or not destino:
         return jsonify({"mensaje": "Se requieren los campos 'origen' y 'destino'."}), 400
 
@@ -234,7 +258,7 @@ def unir_archivos():
 
 @app.route('/')
 def home():
-    return {"message": "API de gestión de tareas y categorías"}
+    return {"message": "API de gestion de tareas y categorias"}
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000)

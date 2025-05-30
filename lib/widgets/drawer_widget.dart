@@ -70,7 +70,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     builder: (context) {
                       return AlertDialog(
                         title: const Text(
-                          'Nueva Categoría',
+                          'Agregar Categoría',
                           style: TextStyle(color: Colors.white),
                         ),
                         content: TextField(
@@ -184,7 +184,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Eliminar Categoría'),
+            title: const Text(
+              'Eliminar Categoría',
+              style: TextStyle(color: Colors.white),
+            ),
             content: Text(
               '¿Estás seguro de que deseas eliminar $categoryName?',
             ),
